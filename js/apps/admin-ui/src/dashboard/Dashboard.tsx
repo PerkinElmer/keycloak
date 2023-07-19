@@ -138,7 +138,6 @@ const Dashboard = () => {
             realm,
             tab: "info",
           })}
-          isBox
           mountOnEnter
         >
           <Tab
