@@ -4,9 +4,9 @@ import {
   Translations,
   TranslationsProvider,
 } from "keycloak-masthead";
-import { Suspense, useMemo } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { AlertProvider } from "ui-shared";
 
 import { environment } from "../environment";
@@ -28,6 +28,14 @@ export const Root = () => {
     }),
     [t]
   );
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      navigate("/personal-info");
+    }
+  }, [location]);
 
   return (
     <Page

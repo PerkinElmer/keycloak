@@ -8,6 +8,7 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import { i18n } from "./i18n";
 import { keycloak } from "./keycloak";
 import { routes } from "./routes";
+import "./revvity.css";
 
 // Initialize required components before rendering app.
 await Promise.all([
