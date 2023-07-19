@@ -239,7 +239,7 @@ export default function UsersSection() {
   const toolbar = (
     <>
       <ToolbarItem>
-        <Button data-testid="add-user" onClick={goToCreate}>
+        <Button variant="primary" data-testid="add-user" onClick={goToCreate}>
           {t("addUser")}
         </Button>
       </ToolbarItem>
@@ -311,7 +311,7 @@ export default function UsersSection() {
             realm: realmName,
             tab: "list",
           })}
-          isBox
+          isBox={false}
           mountOnEnter
         >
           <Tab

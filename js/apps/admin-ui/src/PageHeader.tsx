@@ -12,7 +12,7 @@ import {
   PageHeaderToolsItem,
 } from "@patternfly/react-core";
 import { HelpIcon } from "@patternfly/react-icons";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { HelpHeader } from "./components/help-enabler/HelpHeader";
@@ -51,24 +51,24 @@ const SignOutDropdownItem = () => {
   );
 };
 
-const ServerInfoDropdownItem = () => {
-  const { realm } = useRealm();
-  const { t } = useTranslation();
+// const ServerInfoDropdownItem = () => {
+//   const { realm } = useRealm();
+//   const { t } = useTranslation();
 
-  return (
-    <DropdownItem
-      key="server info"
-      component={
-        // The type definition in PatternFly is incorrect, so we need to cast here.
-        ((props: any) => (
-          <Link {...props} to={toDashboard({ realm })} />
-        )) as unknown as ReactNode
-      }
-    >
-      {t("realmInfo")}
-    </DropdownItem>
-  );
-};
+//   return (
+//     <DropdownItem
+//       key="server info"
+//       component={
+//         // The type definition in PatternFly is incorrect, so we need to cast here.
+//         ((props: any) => (
+//           <Link {...props} to={toDashboard({ realm })} />
+//         )) as unknown as ReactNode
+//       }
+//     >
+//       {t("realmInfo")}
+//     </DropdownItem>
+//   );
+// };
 
 const HelpDropdownItem = () => {
   const { t } = useTranslation();
@@ -82,7 +82,7 @@ const HelpDropdownItem = () => {
 
 const kebabDropdownItems = [
   <ManageAccountDropdownItem key="kebab Manage Account" />,
-  <ServerInfoDropdownItem key="kebab Server Info" />,
+  // <ServerInfoDropdownItem key="kebab Server Info" />,
   <HelpDropdownItem key="kebab Help" />,
   <DropdownSeparator key="kebab sign out separator" />,
   <SignOutDropdownItem key="kebab Sign out" />,
@@ -90,7 +90,7 @@ const kebabDropdownItems = [
 
 const userDropdownItems = [
   <ManageAccountDropdownItem key="Manage Account" />,
-  <ServerInfoDropdownItem key="Server info" />,
+  // <ServerInfoDropdownItem key="Server info" />,
   <DropdownSeparator key="sign out separator" />,
   <SignOutDropdownItem key="Sign out" />,
 ];

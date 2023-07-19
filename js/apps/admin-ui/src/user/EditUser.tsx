@@ -215,7 +215,7 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
         <UserProfileProvider>
           <FormProvider {...userForm}>
             <RoutableTabs
-              isBox
+              isBox={false}
               mountOnEnter
               defaultLocation={toTab("settings")}
             >

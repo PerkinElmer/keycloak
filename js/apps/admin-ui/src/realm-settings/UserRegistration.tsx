@@ -50,6 +50,7 @@ export const UserRegistration = () => {
     <Tabs
       activeKey={activeTab}
       onSelect={(_, key) => setActiveTab(key as number)}
+      isBox={false}
     >
       <Tab
         key={key}

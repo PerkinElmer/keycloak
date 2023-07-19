@@ -7,6 +7,7 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 
 import { RootRoute } from "./routes";
 
+import "./revvity.css";
 import "./index.css";
 
 const router = createHashRouter([RootRoute]);

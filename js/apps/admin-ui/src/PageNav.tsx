@@ -1,16 +1,8 @@
-import {
-  Divider,
-  Nav,
-  NavGroup,
-  NavItem,
-  NavList,
-  PageSidebar,
-} from "@patternfly/react-core";
+import { Nav, NavGroup, PageSidebar } from "@patternfly/react-core";
 import { FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useMatch, useNavigate } from "react-router-dom";
 
-import { RealmSelector } from "./components/realm-selector/RealmSelector";
 import { useAccess } from "./context/access/Access";
 import { useRealm } from "./context/realm-context/RealmContext";
 import { AddRealmRoute } from "./realm/routes/AddRealm";
@@ -79,11 +71,13 @@ export const PageNav = () => {
     "view-events"
   );
 
-  const showConfigure = hasSomeAccess(
-    "view-realm",
-    "query-clients",
-    "view-identity-providers"
-  );
+  // const showConfigure = hasSomeAccess(
+  //   "view-realm",
+  //   "query-clients",
+  //   "view-identity-providers"
+  // );
+
+  const showConfigure = false;
 
   const isOnAddRealm = !!useMatch(AddRealmRoute.path);
 
@@ -92,12 +86,12 @@ export const PageNav = () => {
       className="keycloak__page_nav__nav"
       nav={
         <Nav onSelect={onSelect}>
-          <NavList>
+          {/* <NavList>
             <NavItem className="keycloak__page_nav__nav_item__realm-selector">
               <RealmSelector />
             </NavItem>
           </NavList>
-          <Divider />
+          <Divider /> */}
           {showManage && !isOnAddRealm && (
             <NavGroup aria-label={t("manage")} title={t("manage")}>
               <LeftNav title="clients" path="/clients" />

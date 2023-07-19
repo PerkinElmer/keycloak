@@ -167,7 +167,7 @@ export default function GroupsSection() {
                       }}
                       activeKey={activeTab}
                       onSelect={(_, key) => setActiveTab(key as number)}
-                      isBox
+                      isBox={false}
                       mountOnEnter
                       unmountOnExit
                     >

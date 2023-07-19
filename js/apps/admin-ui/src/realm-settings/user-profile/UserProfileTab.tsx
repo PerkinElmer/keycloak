@@ -31,6 +31,7 @@ export const UserProfileTab = () => {
       <RoutableTabs
         defaultLocation={toUserProfile({ realm, tab: "attributes" })}
         mountOnEnter
+        isBox={false}
       >
         <Tab
           title={<TabTitleText>{t("attributes")}</TabTitleText>}

@@ -160,6 +160,7 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
       <Tabs
         activeKey={activeTab}
         onSelect={(_, key) => setActiveTab(key as string)}
+        isBox={false}
       >
         <Tab
           eventKey="event"

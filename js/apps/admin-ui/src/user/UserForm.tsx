@@ -169,7 +169,6 @@ export const UserForm = ({
 
   return (
     <FormAccess
-      isHorizontal
       onSubmit={handleSubmit(save)}
       role="query-users"
       fineGrainedAccess={user?.access?.manage}

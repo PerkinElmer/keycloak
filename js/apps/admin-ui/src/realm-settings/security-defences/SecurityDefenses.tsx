@@ -18,6 +18,7 @@ export const SecurityDefenses = ({ realm, save }: SecurityDefensesProps) => {
     <Tabs
       activeKey={activeTab}
       onSelect={(_, key) => setActiveTab(key as number)}
+      isBox={false}
     >
       <Tab
         id="headers"

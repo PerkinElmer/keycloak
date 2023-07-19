@@ -352,6 +352,7 @@ export const EvaluateScopes = ({ clientId, protocol }: EvaluateScopesProps) => {
             isVertical
             activeKey={activeTab}
             onSelect={(_, key) => setActiveTab(key as number)}
+            isBox={false}
           >
             <Tab
               id="effectiveProtocolMappers"
