@@ -7,7 +7,6 @@ import { Outlet } from "react-router-dom";
 import { Help } from "ui-shared";
 
 import { Header } from "./PageHeader";
-import { PageNav } from "./PageNav";
 import { AlertProvider } from "./components/alert/Alerts";
 import { PageBreadCrumbs } from "./components/bread-crumb/PageBreadCrumbs";
 import { ErrorRenderer } from "./components/error/ErrorRenderer";
@@ -59,7 +58,6 @@ export const App = ({ keycloak, adminClient }: AdminClientProps) => {
       <Page
         header={<Header />}
         isManagedSidebar
-        sidebar={<PageNav />}
         breadcrumb={<PageBreadCrumbs />}
         mainContainerId={mainPageContentId}
       >
