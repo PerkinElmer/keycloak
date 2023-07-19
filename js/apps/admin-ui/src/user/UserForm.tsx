@@ -43,40 +43,6 @@ export type UserFormProps = {
   onGroupsUpdate?: (groups: GroupRepresentation[]) => void;
 };
 
-const EmailVerified = () => {
-  const { t } = useTranslation("users");
-  const { control } = useFormContext();
-  return (
-    <FormGroup
-      label={t("emailVerified")}
-      fieldId="kc-email-verified"
-      helperTextInvalid={t("common:required")}
-      labelIcon={
-        <HelpItem
-          helpText={t("users-help:emailVerified")}
-          fieldLabelId="users:emailVerified"
-        />
-      }
-    >
-      <Controller
-        name="emailVerified"
-        defaultValue={false}
-        control={control}
-        render={({ field }) => (
-          <Switch
-            data-testid="email-verified-switch"
-            id="kc-user-email-verified"
-            onChange={(value) => field.onChange(value)}
-            isChecked={field.value}
-            label={t("common:yes")}
-            labelOff={t("common:no")}
-          />
-        )}
-      />
-    </FormGroup>
-  );
-};
-
 export const UserForm = ({
   user,
   bruteForce: { isBruteForceProtected, isLocked } = {
@@ -159,10 +125,6 @@ export const UserForm = ({
     });
   };
 
-  const toggleModal = () => {
-    setOpen(!open);
-  };
-
   const isUserProfileEnabled =
     isFeatureEnabled(Feature.DeclarativeUserProfile) &&
     realm?.attributes?.userProfileEnabled === "true";
@@ -190,7 +152,6 @@ export const UserForm = ({
           filterGroups={selectedGroups}
         />
       )}
-      {isUserProfileEnabled && <EmailVerified />}
       {user?.id && (
         <>
           <FormGroup label={t("common:id")} fieldId="kc-id" isRequired>
@@ -270,7 +231,6 @@ export const UserForm = ({
               })}
             />
           </FormGroup>
-          <EmailVerified />
           <FormGroup
             label={t("firstName")}
             fieldId="kc-firstName"
@@ -348,14 +308,6 @@ export const UserForm = ({
                     </Chip>
                   ))}
                 </ChipGroup>
-                <Button
-                  id="kc-join-groups-button"
-                  onClick={toggleModal}
-                  variant="secondary"
-                  data-testid="join-groups-button"
-                >
-                  {t("users:joinGroups")}
-                </Button>
               </InputGroup>
             )}
           />
