@@ -7,7 +7,6 @@ import { initI18n } from "./i18n";
 
 import { App } from "./App";
 import { PageNotFoundSection } from "./PageNotFoundSection";
-import dashboardRoutes from "./dashboard/routes";
 import userRoutes from "./user/routes";
 
 export type AppRouteObjectHandle = {
@@ -28,11 +27,7 @@ export const NotFoundRoute: AppRouteObject = {
   },
 };
 
-export const routes: AppRouteObject[] = [
-  ...userRoutes,
-  ...dashboardRoutes,
-  NotFoundRoute,
-];
+export const routes: AppRouteObject[] = [...userRoutes, NotFoundRoute];
 
 const { keycloak, adminClient } = await initAdminClient();
 

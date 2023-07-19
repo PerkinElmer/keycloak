@@ -18,6 +18,11 @@ export const UsersRoute: AppRouteObject = {
   },
 };
 
+export const UsersRouteWithoutRealm: AppRouteObject = {
+  ...UsersRoute,
+  path: "/",
+};
+
 export const UsersRouteWithTab: AppRouteObject = {
   ...UsersRoute,
   path: "/:realm/users/:tab",
