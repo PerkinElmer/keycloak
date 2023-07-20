@@ -20,7 +20,6 @@ import {
   useRoutableTab,
 } from "../components/routable-tabs/RoutableTabs";
 import { ViewHeader } from "../components/view-header/ViewHeader";
-import { useAccess } from "../context/access/Access";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { UserProfileProvider } from "../realm-settings/user-profile/UserProfileContext";
@@ -28,7 +27,6 @@ import { useParams } from "../utils/useParams";
 import { useUpdateEffect } from "../utils/useUpdateEffect";
 import { UserCredentials } from "./UserCredentials";
 import { BruteForced, UserForm } from "./UserForm";
-import { UserIdentityProviderLinks } from "./UserIdentityProviderLinks";
 import {
   isUserProfileError,
   userProfileErrorToString,
@@ -94,7 +92,6 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
   const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();
   const navigate = useNavigate();
-  const { hasAccess } = useAccess();
   const userForm = useForm<UserRepresentation>({
     mode: "onChange",
     defaultValues: user,
@@ -112,7 +109,6 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
   const settingsTab = useTab("settings");
   const credentialsTab = useTab("credentials");
   const roleMappingTab = useTab("role-mapping");
-  const identityProviderLinksTab = useTab("identity-provider-links");
 
   // Ensure the form remains up-to-date when the user is updated.
   useUpdateEffect(() => userForm.reset(user), [user]);
@@ -236,17 +232,6 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
               >
                 <UserRoleMapping id={user.id!} name={user.username!} />
               </Tab>
-              {hasAccess("view-identity-providers") && (
-                <Tab
-                  data-testid="identity-provider-links-tab"
-                  title={
-                    <TabTitleText>{t("identityProviderLinks")}</TabTitleText>
-                  }
-                  {...identityProviderLinksTab}
-                >
-                  <UserIdentityProviderLinks userId={user.id!} />
-                </Tab>
-              )}
             </RoutableTabs>
           </FormProvider>
         </UserProfileProvider>

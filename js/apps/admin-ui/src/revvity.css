@@ -52,7 +52,6 @@
   border: 1px solid transparent;
   border-radius: var(--pf-global--BorderRadius--sm);
   padding: var(--pf-global--spacer--sm) var(--pf-global--spacer--md);
-  margin-bottom: var(--pf-global--spacer--sm);
 }
 
 .pf-c-tabs__item-text:hover {
