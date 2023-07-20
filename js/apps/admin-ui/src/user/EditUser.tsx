@@ -26,18 +26,14 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { UserProfileProvider } from "../realm-settings/user-profile/UserProfileContext";
 import { useParams } from "../utils/useParams";
 import { useUpdateEffect } from "../utils/useUpdateEffect";
-import { UserAttributes } from "./UserAttributes";
-import { UserConsents } from "./UserConsents";
 import { UserCredentials } from "./UserCredentials";
 import { BruteForced, UserForm } from "./UserForm";
-import { UserGroups } from "./UserGroups";
 import { UserIdentityProviderLinks } from "./UserIdentityProviderLinks";
 import {
   isUserProfileError,
   userProfileErrorToString,
 } from "./UserProfileFields";
 import { UserRoleMapping } from "./UserRoleMapping";
-import { UserSessions } from "./UserSessions";
 import { UserParams, UserTab, toUser } from "./routes/User";
 import { toUsers } from "./routes/Users";
 
@@ -114,13 +110,9 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
   const useTab = (tab: UserTab) => useRoutableTab(toTab(tab));
 
   const settingsTab = useTab("settings");
-  const attributesTab = useTab("attributes");
   const credentialsTab = useTab("credentials");
   const roleMappingTab = useTab("role-mapping");
-  const groupsTab = useTab("groups");
-  const consentsTab = useTab("consents");
   const identityProviderLinksTab = useTab("identity-provider-links");
-  const sessionsTab = useTab("sessions");
 
   // Ensure the form remains up-to-date when the user is updated.
   useUpdateEffect(() => userForm.reset(user), [user]);
@@ -229,13 +221,6 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
                 </PageSection>
               </Tab>
               <Tab
-                data-testid="attributes"
-                title={<TabTitleText>{t("common:attributes")}</TabTitleText>}
-                {...attributesTab}
-              >
-                <UserAttributes user={user} />
-              </Tab>
-              <Tab
                 data-testid="credentials"
                 isHidden={!user.access?.view}
                 title={<TabTitleText>{t("common:credentials")}</TabTitleText>}
@@ -251,22 +236,6 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
               >
                 <UserRoleMapping id={user.id!} name={user.username!} />
               </Tab>
-              {hasAccess("query-groups") && (
-                <Tab
-                  data-testid="user-groups-tab"
-                  title={<TabTitleText>{t("common:groups")}</TabTitleText>}
-                  {...groupsTab}
-                >
-                  <UserGroups user={user} />
-                </Tab>
-              )}
-              <Tab
-                data-testid="user-consents-tab"
-                title={<TabTitleText>{t("consents")}</TabTitleText>}
-                {...consentsTab}
-              >
-                <UserConsents />
-              </Tab>
               {hasAccess("view-identity-providers") && (
                 <Tab
                   data-testid="identity-provider-links-tab"
@@ -278,13 +247,6 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
                   <UserIdentityProviderLinks userId={user.id!} />
                 </Tab>
               )}
-              <Tab
-                data-testid="user-sessions-tab"
-                title={<TabTitleText>{t("sessions")}</TabTitleText>}
-                {...sessionsTab}
-              >
-                <UserSessions />
-              </Tab>
             </RoutableTabs>
           </FormProvider>
         </UserProfileProvider>
