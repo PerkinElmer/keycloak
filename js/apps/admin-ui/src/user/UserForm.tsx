@@ -5,14 +5,11 @@ import {
   ActionGroup,
   AlertVariant,
   Button,
-  Chip,
-  ChipGroup,
   FormGroup,
-  InputGroup,
   Switch,
 } from "@patternfly/react-core";
 import { useState } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -67,7 +64,6 @@ export const UserForm = ({
     handleSubmit,
     register,
     watch,
-    control,
     reset,
     formState: { errors },
   } = useFormContext();
@@ -97,11 +93,6 @@ export const UserForm = ({
     } catch (error) {
       addError("users:unlockError", error);
     }
-  };
-
-  const deleteItem = (id: string) => {
-    setSelectedGroups(selectedGroups.filter((item) => item.name !== id));
-    onGroupsUpdate?.(selectedGroups);
   };
 
   const addChips = async (groups: GroupRepresentation[]): Promise<void> => {
@@ -282,38 +273,6 @@ export const UserForm = ({
           />
         </FormGroup>
       )}
-      {!user?.id && (
-        <FormGroup
-          label={t("common:groups")}
-          fieldId="kc-groups"
-          validated={errors.requiredActions ? "error" : "default"}
-          helperTextInvalid={t("common:required")}
-          labelIcon={
-            <HelpItem helpText={t("users-help:groups")} fieldLabelId="groups" />
-          }
-        >
-          <Controller
-            name="groups"
-            defaultValue={[]}
-            control={control}
-            render={() => (
-              <InputGroup>
-                <ChipGroup categoryName={" "}>
-                  {selectedGroups.map((currentChip) => (
-                    <Chip
-                      key={currentChip.id}
-                      onClick={() => deleteItem(currentChip.name!)}
-                    >
-                      {currentChip.path}
-                    </Chip>
-                  ))}
-                </ChipGroup>
-              </InputGroup>
-            )}
-          />
-        </FormGroup>
-      )}
-
       <ActionGroup>
         <Button
           data-testid={!user?.id ? "create-user" : "save-user"}
