@@ -1,0 +1,144 @@
+@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
+
+:root {
+  --component-states-hover-border: #000;
+  --revvity-orchid: #8724b0;
+  --revvity-black: #000;
+}
+
+#kc-header {
+  display: none;
+}
+
+#kc-page-title {
+  color: var(--revvity-black, #000);
+  font-size: 24px;
+  font-family: Hanken Grotesk;
+  line-height: 36px;
+  margin-bottom: 36px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.login-pf body {
+  background: white;
+}
+
+.login-pf-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: center;
+}
+
+.card-pf {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 425px;
+  padding: 24px;
+}
+
+#kc-form-login {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+#kc-form-login #kc-form-buttons {
+  align-self: center;
+}
+
+.pf-c-form-control {
+  border-radius: 12px;
+  border: 1px solid #000000;
+  padding: 10px 8px;
+  font-size: 16px;
+  font-family: Arial;
+  line-height: 24px;
+  height: 46px;
+  vertical-align: middle;
+}
+
+.pf-c-form-control:hover {
+  border: 2px solid var(--component-states-hover-border, #000);
+}
+
+.pf-c-form-control:focus {
+  border: 2px solid var(--revvity-orchid, #8724b0);
+  padding: 10px 8px;
+}
+
+.pf-c-form__label-text {
+  color: var(--revvity-black, #000);
+  font-size: 16px;
+  font-family: Arial;
+  font-weight: 700;
+  line-height: 24px;
+  margin-bottom: 8px;
+}
+
+.pf-c-button.pf-m-primary {
+  border-radius: 20px;
+  border: 1px solid var(--revvity-black, #000);
+  background: var(--revvity-black, #000);
+  padding: 10px 16px;
+
+  color: var(--revvity-white, #fff);
+  font-size: 18px;
+  font-family: Arial;
+}
+
+.pf-c-button.btn-default {
+  background: white;
+  border: 1px solid var(--revvity-black, #000);
+  padding: 10px 16px;
+  border-radius: 20px;
+  margin: 1px;
+}
+
+.pf-c-button.btn-default:hover {
+  border: 2px solid var(--revvity-black, #000);
+  margin: 0px;
+}
+
+.pf-c-button.btn-default:active {
+  background-color: var(--revvity-black, #000);
+  margin: 0px;
+  color: var(--revvity-white, #fff);
+}
+
+.pf-c-button.pf-m-primary:focus {
+  border: 2px solid var(--revvity-orchid, #8724b0);
+}
+
+.pf-c-button.pf-m-primary:hover,
+.pf-c-button.pf-m-primary:active {
+  border-radius: 20px;
+  border: 1px solid var(--revvity-black, #000);
+  background: var(--revvity-white, #fff);
+  color: var(--revvity-black, #000);
+}
+
+#password-new,
+#password-confirm {
+  width: 100%;
+}
+
+#kc-form-options {
+  margin-bottom: 16px;
+}
+
+.forgot-password-message {
+  font-family: Hanken Grotesk;
+  font-size: 14px;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 1.4;
+}
