@@ -15,6 +15,8 @@ import { DeleteGroup } from "./components/DeleteGroup";
 import { GroupToolbar } from "./components/GroupToolbar";
 import { MoveDialog } from "./components/MoveDialog";
 import { getLastId } from "./groupIdUtils";
+import { useWhoAmI } from "../context/whoami/WhoAmI";
+import { adminClient } from "../admin-client";
 
 type GroupTableProps = {
   refresh: () => void;
@@ -44,7 +46,10 @@ export const GroupTable = ({
   const id = getLastId(location.pathname);
 
   const { hasAccess } = useAccess();
-  const isManager = hasAccess("manage-realm") || currentGroup()?.access?.manage;
+  const isManager = hasAccess("view-events") || currentGroup()?.access?.manage;
+
+  const { whoAmI } = useWhoAmI();
+  const currentUserId = whoAmI.getUserId();
 
   const loader = async (first?: number, max?: number) => {
     const params: Record<string, string> = {
@@ -52,13 +57,18 @@ export const GroupTable = ({
       first: first?.toString() || "",
       max: max?.toString() || "",
     };
-
     let groupsData = undefined;
-    groupsData = await fetchAdminUI<GroupRepresentation[]>("groups", {
-      ...params,
-      global: "false",
-    });
 
+    if (isManager) {
+      groupsData = await fetchAdminUI<GroupRepresentation[]>("groups", {
+        ...params,
+        global: "false",
+      });
+    } else {
+      groupsData = await adminClient.users.listGroups({
+        id: currentUserId,
+      });
+    }
     return groupsData;
   };
 
@@ -165,13 +175,6 @@ export const GroupTable = ({
                   title: t("rename"),
                   onRowClick: async (group) => {
                     setRename(group);
-                    return false;
-                  },
-                },
-                {
-                  title: t("moveTo"),
-                  onRowClick: async (group) => {
-                    setMove(group);
                     return false;
                   },
                 },

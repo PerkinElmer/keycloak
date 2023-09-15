@@ -25,11 +25,8 @@ import { useAccess } from "../context/access/Access";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { UserProfileProvider } from "../realm-settings/user-profile/UserProfileContext";
 import { useFetch } from "../utils/useFetch";
-import useIsFeatureEnabled, { Feature } from "../utils/useIsFeatureEnabled";
 import { useParams } from "../utils/useParams";
 import { useUpdateEffect } from "../utils/useUpdateEffect";
-import { UserAttributes } from "./UserAttributes";
-import { UserConsents } from "./UserConsents";
 import { UserCredentials } from "./UserCredentials";
 import { BruteForced, UserForm } from "./UserForm";
 import { UserGroups } from "./UserGroups";
@@ -123,11 +120,6 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
     [],
   );
 
-  const isFeatureEnabled = useIsFeatureEnabled();
-  const isUserProfileEnabled =
-    isFeatureEnabled(Feature.DeclarativeUserProfile) &&
-    realmRepresentation?.attributes?.userProfileEnabled === "true";
-
   const toTab = (tab: UserTab) =>
     toUser({
       realm,
@@ -138,11 +130,9 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
   const useTab = (tab: UserTab) => useRoutableTab(toTab(tab));
 
   const settingsTab = useTab("settings");
-  const attributesTab = useTab("attributes");
   const credentialsTab = useTab("credentials");
   const roleMappingTab = useTab("role-mapping");
   const groupsTab = useTab("groups");
-  const consentsTab = useTab("consents");
   const identityProviderLinksTab = useTab("identity-provider-links");
   const sessionsTab = useTab("sessions");
 
@@ -203,84 +193,84 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
     },
   });
 
+  const defaultTab = hasAccess("view-events") ? "settings" : "groups";
+
   return (
     <>
       <ImpersonateConfirm />
       <DeleteConfirm />
-      <ViewHeader
-        titleKey={user.username!}
-        className="kc-username-view-header"
-        divider={false}
-        dropdownItems={[
-          <DropdownItem
-            key="impersonate"
-            isDisabled={!user.access?.impersonate}
-            onClick={() => toggleImpersonateDialog()}
-          >
-            {t("impersonate")}
-          </DropdownItem>,
-          <DropdownItem
-            key="delete"
-            isDisabled={!user.access?.manage}
-            onClick={() => toggleDeleteDialog()}
-          >
-            {t("common:delete")}
-          </DropdownItem>,
-        ]}
-        onToggle={(value) =>
-          save({ ...toUserFormFields(user), enabled: value })
-        }
-        isEnabled={user.enabled}
-      />
-
+      {hasAccess("view-events") && (
+        <ViewHeader
+          titleKey={user.username!}
+          className="kc-username-view-header"
+          divider={false}
+          dropdownItems={[
+            <DropdownItem
+              key="impersonate"
+              isDisabled={!user.access?.impersonate}
+              onClick={() => toggleImpersonateDialog()}
+            >
+              {t("impersonate")}
+            </DropdownItem>,
+            <DropdownItem
+              key="delete"
+              isDisabled={!user.access?.manage}
+              onClick={() => toggleDeleteDialog()}
+            >
+              {t("common:delete")}
+            </DropdownItem>,
+          ]}
+          onToggle={(value) =>
+            save({ ...toUserFormFields(user), enabled: value })
+          }
+          isEnabled={user.enabled}
+        />
+      )}
       <PageSection variant="light" className="pf-u-p-0">
         <UserProfileProvider>
           <FormProvider {...userForm}>
             <RoutableTabs
               isBox
               mountOnEnter
-              defaultLocation={toTab("settings")}
+              defaultLocation={toTab(defaultTab)}
             >
-              <Tab
-                data-testid="user-details-tab"
-                title={<TabTitleText>{t("common:details")}</TabTitleText>}
-                {...settingsTab}
-              >
-                <PageSection variant="light">
-                  <UserForm
-                    save={save}
-                    user={user}
-                    bruteForce={bruteForced}
-                    realm={realmRepresentation}
-                  />
-                </PageSection>
-              </Tab>
-              {!isUserProfileEnabled && (
+              {hasAccess("view-events") && (
                 <Tab
-                  data-testid="attributes"
-                  title={<TabTitleText>{t("common:attributes")}</TabTitleText>}
-                  {...attributesTab}
+                  data-testid="user-details-tab"
+                  title={<TabTitleText>{t("common:details")}</TabTitleText>}
+                  {...settingsTab}
                 >
-                  <UserAttributes user={user} save={save} />
+                  <PageSection variant="light">
+                    <UserForm
+                      save={save}
+                      user={user}
+                      bruteForce={bruteForced}
+                      realm={realmRepresentation}
+                    />
+                  </PageSection>
                 </Tab>
               )}
-              <Tab
-                data-testid="credentials"
-                isHidden={!user.access?.view}
-                title={<TabTitleText>{t("common:credentials")}</TabTitleText>}
-                {...credentialsTab}
-              >
-                <UserCredentials user={user} />
-              </Tab>
-              <Tab
-                data-testid="role-mapping-tab"
-                isHidden={!user.access?.mapRoles}
-                title={<TabTitleText>{t("roleMapping")}</TabTitleText>}
-                {...roleMappingTab}
-              >
-                <UserRoleMapping id={user.id!} name={user.username!} />
-              </Tab>
-              {hasAccess("query-groups") && (
+              {hasAccess("view-events") && (
+                <Tab
+                  data-testid="credentials"
+                  isHidden={!user.access?.view}
+                  title={<TabTitleText>{t("common:credentials")}</TabTitleText>}
+                  {...credentialsTab}
+                >
+                  <UserCredentials user={user} />
+                </Tab>
+              )}
+              {hasAccess("view-events") && (
+                <Tab
+                  data-testid="role-mapping-tab"
+                  isHidden={!user.access?.mapRoles}
+                  title={<TabTitleText>{t("roleMapping")}</TabTitleText>}
+                  {...roleMappingTab}
+                >
+                  <UserRoleMapping id={user.id!} name={user.username!} />
+                </Tab>
+              )}
+              {hasAccess("manage-users") && (
                 <Tab
                   data-testid="user-groups-tab"
                   title={<TabTitleText>{t("common:groups")}</TabTitleText>}
@@ -289,13 +279,7 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
                   <UserGroups user={user} />
                 </Tab>
               )}
-              <Tab
-                data-testid="user-consents-tab"
-                title={<TabTitleText>{t("consents")}</TabTitleText>}
-                {...consentsTab}
-              >
-                <UserConsents />
-              </Tab>
+
               {hasAccess("view-identity-providers") && (
                 <Tab
                   data-testid="identity-provider-links-tab"
@@ -307,13 +291,15 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
                   <UserIdentityProviderLinks userId={user.id!} />
                 </Tab>
               )}
-              <Tab
-                data-testid="user-sessions-tab"
-                title={<TabTitleText>{t("sessions")}</TabTitleText>}
-                {...sessionsTab}
-              >
-                <UserSessions />
-              </Tab>
+              {hasAccess("view-events") && (
+                <Tab
+                  data-testid="user-sessions-tab"
+                  title={<TabTitleText>{t("sessions")}</TabTitleText>}
+                  {...sessionsTab}
+                >
+                  <UserSessions />
+                </Tab>
+              )}
             </RoutableTabs>
           </FormProvider>
         </UserProfileProvider>

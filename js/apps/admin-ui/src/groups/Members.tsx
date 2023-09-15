@@ -3,7 +3,6 @@ import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/us
 import {
   AlertVariant,
   Button,
-  Checkbox,
   Dropdown,
   DropdownItem,
   KebabToggle,
@@ -50,7 +49,7 @@ export const Members = () => {
   const { addAlert, addError } = useAlerts();
   const location = useLocation();
   const id = getLastId(location.pathname);
-  const [includeSubGroup, setIncludeSubGroup] = useState(false);
+  const [includeSubGroup] = useState(false);
   const { currentGroup: group } = useSubGroups();
   const [currentGroup, setCurrentGroup] = useState<GroupRepresentation>();
   const [addMembers, setAddMembers] = useState(false);
@@ -64,8 +63,7 @@ export const Members = () => {
     [],
   );
 
-  const isManager =
-    hasAccess("manage-users") || currentGroup?.access!.manageMembership;
+  const isManager = hasAccess("manage-users");
 
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
@@ -142,15 +140,6 @@ export const Members = () => {
                 >
                   {t("addMember")}
                 </Button>
-              </ToolbarItem>
-              <ToolbarItem>
-                <Checkbox
-                  data-testid="includeSubGroupsCheck"
-                  label={t("includeSubGroups")}
-                  id="kc-include-sub-groups"
-                  isChecked={includeSubGroup}
-                  onChange={() => setIncludeSubGroup(!includeSubGroup)}
-                />
               </ToolbarItem>
               <ToolbarItem>
                 <Dropdown
@@ -249,12 +238,7 @@ export const Members = () => {
             instructions={isManager ? t("users:emptyInstructions") : undefined}
             primaryActionText={isManager ? t("addMember") : undefined}
             onPrimaryAction={() => setAddMembers(true)}
-            secondaryActions={[
-              {
-                text: t("includeSubGroups"),
-                onClick: () => setIncludeSubGroup(true),
-              },
-            ]}
+            secondaryActions={[]}
           />
         }
       />

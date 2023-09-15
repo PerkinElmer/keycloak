@@ -26,6 +26,9 @@ import { GroupPath } from "./GroupPath";
 import "./group-picker-dialog.css";
 import { fetchAdminUI } from "../../context/auth/admin-ui-endpoint";
 
+import { useWhoAmI } from "../../context/whoami/WhoAmI";
+import { useAccess } from "../../context/access/Access";
+
 export type GroupPickerDialogProps = {
   id?: string;
   type: "selectOne" | "selectMany";
@@ -66,6 +69,12 @@ export const GroupPickerDialog = ({
 
   const currentGroup = () => navigation[navigation.length - 1];
 
+  const { whoAmI } = useWhoAmI();
+  const currentUserId = whoAmI.getUserId();
+
+  const { hasAccess } = useAccess();
+  const isManager = hasAccess("view-events");
+
   useFetch(
     async () => {
       let group;
@@ -73,16 +82,22 @@ export const GroupPickerDialog = ({
       let existingUserGroups;
       let count = 0;
       if (!groupId) {
-        groups = await fetchAdminUI<GroupRepresentation[]>(
-          "groups",
-          Object.assign(
-            {
-              first: `${first}`,
-              max: `${max + 1}`,
-            },
-            isSearching ? null : { search: filter },
-          ),
-        );
+        if (!isManager) {
+          groups = await adminClient.users.listGroups({
+            id: currentUserId,
+          });
+        } else {
+          groups = await fetchAdminUI<GroupRepresentation[]>(
+            "groups",
+            Object.assign(
+              {
+                first: `${first}`,
+                max: `${max + 1}`,
+              },
+              isSearching ? null : { search: filter },
+            ),
+          );
+        }
       } else if (!navigation.map(({ id }) => id).includes(groupId)) {
         group = await adminClient.groups.findOne({ id: groupId });
         if (!group) {

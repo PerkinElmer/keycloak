@@ -1,18 +1,10 @@
 import type GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
 import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
-import {
-  AlertVariant,
-  Button,
-  ButtonVariant,
-  Checkbox,
-  Popover,
-} from "@patternfly/react-core";
-import { QuestionCircleIcon } from "@patternfly/react-icons";
+import { AlertVariant, Button, ButtonVariant } from "@patternfly/react-core";
 import { cellWidth } from "@patternfly/react-table";
 import { intersectionBy, sortBy, uniqBy } from "lodash-es";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHelp } from "ui-shared";
 
 import { adminClient } from "../admin-client";
 import { useAlerts } from "../components/alert/Alerts";
@@ -38,13 +30,11 @@ export const UserGroups = ({ user }: UserGroupsProps) => {
     [],
   );
 
-  const [isDirectMembership, setDirectMembership] = useState(true);
+  const [isDirectMembership] = useState(true);
   const [directMembershipList, setDirectMembershipList] = useState<
     GroupRepresentation[]
   >([]);
   const [open, setOpen] = useState(false);
-
-  const { enabled } = useHelp();
 
   const { hasAccess } = useAccess();
   const isManager = hasAccess("manage-users");
@@ -192,17 +182,6 @@ export const UserGroups = ({ user }: UserGroupsProps) => {
             >
               {t("joinGroup")}
             </Button>
-            <Checkbox
-              label={t("directMembership")}
-              key="direct-membership-check"
-              id="kc-direct-membership-checkbox"
-              onChange={() => {
-                setDirectMembership(!isDirectMembership);
-                refresh();
-              }}
-              isChecked={isDirectMembership}
-              className="direct-membership-check"
-            />
             <Button
               onClick={() => leave(selectedGroups)}
               data-testid="leave-group-button"
@@ -211,23 +190,6 @@ export const UserGroups = ({ user }: UserGroupsProps) => {
             >
               {t("leave")}
             </Button>
-
-            {enabled && (
-              <Popover
-                aria-label="Basic popover"
-                position="bottom"
-                bodyContent={<div>{t("whoWillAppearPopoverText")}</div>}
-              >
-                <Button
-                  variant="link"
-                  className="kc-who-will-appear-button"
-                  key="who-will-appear-button"
-                  icon={<QuestionCircleIcon />}
-                >
-                  {t("whoWillAppearLinkText")}
-                </Button>
-              </Popover>
-            )}
           </>
         }
         columns={[

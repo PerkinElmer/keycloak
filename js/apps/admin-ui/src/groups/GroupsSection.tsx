@@ -1,11 +1,6 @@
 import type GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
 import {
   Button,
-  Drawer,
-  DrawerContent,
-  DrawerContentBody,
-  DrawerHead,
-  DrawerPanelContent,
   DropdownItem,
   PageSection,
   PageSectionVariants,
@@ -33,7 +28,6 @@ import { GroupsModal } from "./GroupsModal";
 import { Members } from "./Members";
 import { useSubGroups } from "./SubGroupsContext";
 import { DeleteGroup } from "./components/DeleteGroup";
-import { GroupTree } from "./components/GroupTree";
 import { getId, getLastId } from "./groupIdUtils";
 import { toGroups } from "./routes/Groups";
 
@@ -58,11 +52,9 @@ export default function GroupsSection() {
   const refresh = () => setKey(key + 1);
 
   const { hasAccess } = useAccess();
-  const canManageGroup =
-    hasAccess("manage-users") || currentGroup()?.access?.manage;
+  const canManageGroup = hasAccess("view-events");
   const canViewDetails =
-    hasAccess("query-groups", "view-users") ||
-    hasAccess("manage-users", "query-groups");
+    hasAccess("view-users") || hasAccess("manage-users", "query-groups");
   const canViewMembers =
     hasAccess("view-users") ||
     currentGroup()?.access?.viewMembers ||
@@ -121,95 +113,76 @@ export default function GroupsSection() {
         />
       )}
       <PageSection variant={PageSectionVariants.light} className="pf-u-p-0">
-        <Drawer isInline isExpanded={open} key={key} position="left">
-          <DrawerContent
-            panelContent={
-              <DrawerPanelContent isResizable>
-                <DrawerHead>
-                  <GroupTree
-                    refresh={refresh}
-                    canViewDetails={canViewDetails}
-                  />
-                </DrawerHead>
-              </DrawerPanelContent>
-            }
-          >
-            <DrawerContentBody>
-              <Tooltip content={open ? t("common:hide") : t("common:show")}>
-                <Button
-                  aria-label={open ? t("common:hide") : t("common:show")}
-                  variant="plain"
-                  icon={open ? <AngleLeftIcon /> : <TreeIcon />}
-                  onClick={toggle}
-                />
-              </Tooltip>
-              <GroupBreadCrumbs />
-              <ViewHeader
-                titleKey={!id ? "groups:groups" : currentGroup()?.name!}
-                subKey={!id ? "groups:groupsDescription" : ""}
-                helpUrl={!id ? helpUrls.groupsUrl : ""}
-                divider={!id}
-                dropdownItems={
-                  id && canManageGroup
-                    ? [
-                        <DropdownItem
-                          data-testid="renameGroupAction"
-                          key="renameGroup"
-                          onClick={() => setRename(currentGroup())}
-                        >
-                          {t("renameGroup")}
-                        </DropdownItem>,
-                        <DropdownItem
-                          data-testid="deleteGroup"
-                          key="deleteGroup"
-                          onClick={toggleDeleteOpen}
-                        >
-                          {t("deleteGroup")}
-                        </DropdownItem>,
-                      ]
-                    : undefined
-                }
-              />
-              {subGroups.length > 0 && (
-                <Tabs
-                  inset={{
-                    default: "insetNone",
-                    md: "insetSm",
-                    xl: "insetLg",
-                    "2xl": "inset2xl",
-                  }}
-                  activeKey={activeTab}
-                  onSelect={(_, key) => setActiveTab(key as number)}
-                  isBox
-                  mountOnEnter
-                  unmountOnExit
-                >
-                  {canViewMembers && (
-                    <Tab
-                      data-testid="members"
-                      eventKey={1}
-                      title={<TabTitleText>{t("members")}</TabTitleText>}
-                    >
-                      <Members />
-                    </Tab>
-                  )}
-                  <Tab
-                    data-testid="attributes"
-                    eventKey={2}
-                    title={
-                      <TabTitleText>{t("common:attributes")}</TabTitleText>
-                    }
+        <Tooltip content={open ? t("common:hide") : t("common:show")}>
+          <Button
+            aria-label={open ? t("common:hide") : t("common:show")}
+            variant="plain"
+            icon={open ? <AngleLeftIcon /> : <TreeIcon />}
+            onClick={toggle}
+          />
+        </Tooltip>
+        <GroupBreadCrumbs />
+        <ViewHeader
+          titleKey={!id ? "groups:groups" : currentGroup()?.name!}
+          subKey={!id ? "groups:groupsDescription" : ""}
+          helpUrl={!id ? helpUrls.groupsUrl : ""}
+          divider={!id}
+          dropdownItems={
+            id && canManageGroup
+              ? [
+                  <DropdownItem
+                    data-testid="renameGroupAction"
+                    key="renameGroup"
+                    onClick={() => setRename(currentGroup())}
                   >
-                    <GroupAttributes />
-                  </Tab>
-                </Tabs>
-              )}
-              {subGroups.length === 0 && (
-                <GroupTable refresh={refresh} canViewDetails={canViewDetails} />
-              )}
-            </DrawerContentBody>
-          </DrawerContent>
-        </Drawer>
+                    {t("renameGroup")}
+                  </DropdownItem>,
+                  <DropdownItem
+                    data-testid="deleteGroup"
+                    key="deleteGroup"
+                    onClick={toggleDeleteOpen}
+                  >
+                    {t("deleteGroup")}
+                  </DropdownItem>,
+                ]
+              : undefined
+          }
+        />
+        {subGroups.length > 0 && (
+          <Tabs
+            inset={{
+              default: "insetNone",
+              md: "insetSm",
+              xl: "insetLg",
+              "2xl": "inset2xl",
+            }}
+            activeKey={activeTab}
+            onSelect={(_, key) => setActiveTab(key as number)}
+            isBox
+            mountOnEnter
+            unmountOnExit
+          >
+            {canViewMembers && (
+              <Tab
+                data-testid="members"
+                eventKey={0}
+                title={<TabTitleText>{t("members")}</TabTitleText>}
+              >
+                <Members />
+              </Tab>
+            )}
+            <Tab
+              data-testid="attributes"
+              eventKey={1}
+              title={<TabTitleText>{t("common:attributes")}</TabTitleText>}
+            >
+              <GroupAttributes />
+            </Tab>
+          </Tabs>
+        )}
+        {subGroups.length === 0 && (
+          <GroupTable refresh={refresh} canViewDetails={canViewDetails} />
+        )}
       </PageSection>
     </>
   );
