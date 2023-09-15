@@ -1,16 +1,8 @@
-import {
-  Divider,
-  Nav,
-  NavGroup,
-  NavItem,
-  NavList,
-  PageSidebar,
-} from "@patternfly/react-core";
+import { Divider, Nav, NavGroup, PageSidebar } from "@patternfly/react-core";
 import { FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useMatch, useNavigate } from "react-router-dom";
 
-import { RealmSelector } from "./components/realm-selector/RealmSelector";
 import { useAccess } from "./context/access/Access";
 import { useRealm } from "./context/realm-context/RealmContext";
 import { AddRealmRoute } from "./realm/routes/AddRealm";
@@ -80,7 +72,7 @@ export const PageNav = () => {
   );
 
   const showConfigure = hasSomeAccess(
-    "view-realm",
+    "manage-realm",
     "query-clients",
     "view-identity-providers",
   );
@@ -92,29 +84,19 @@ export const PageNav = () => {
       className="keycloak__page_nav__nav"
       nav={
         <Nav onSelect={onSelect}>
-          <NavList>
-            <NavItem className="keycloak__page_nav__nav_item__realm-selector">
-              <RealmSelector />
-            </NavItem>
-          </NavList>
           <Divider />
           {showManage && !isOnAddRealm && (
             <NavGroup aria-label={t("manage")} title={t("manage")}>
-              <LeftNav title="clients" path="/clients" />
-              <LeftNav title="clientScopes" path="/client-scopes" />
-              <LeftNav title="realmRoles" path="/roles" />
               <LeftNav title="users" path="/users" />
               <LeftNav title="groups" path="/groups" />
               <LeftNav title="sessions" path="/sessions" />
-              <LeftNav title="events" path="/events" />
+              {showConfigure && <LeftNav title="events" path="/events" />}
             </NavGroup>
           )}
 
           {showConfigure && !isOnAddRealm && (
             <NavGroup aria-label={t("configure")} title={t("configure")}>
               <LeftNav title="realmSettings" path="/realm-settings" />
-              <LeftNav title="authentication" path="/authentication" />
-              <LeftNav title="identityProviders" path="/identity-providers" />
               <LeftNav title="userFederation" path="/user-federation" />
             </NavGroup>
           )}

@@ -66,7 +66,7 @@ export function UserDataTableToolbarItems({
   // This is because the user could have fine-grained access to users
   // of a group.  There is no way to know this without searching the
   // permissions of every group.
-  const isManager = hasAccess("query-users");
+  const isManager = hasAccess("manage-realm");
 
   const searchItem = () => {
     return (

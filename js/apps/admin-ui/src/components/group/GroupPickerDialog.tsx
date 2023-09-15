@@ -74,7 +74,7 @@ export const GroupPickerDialog = ({
       let count = 0;
       if (!groupId) {
         groups = await fetchAdminUI<GroupRepresentation[]>(
-          "ui-ext/groups",
+          "groups",
           Object.assign(
             {
               first: `${first}`,

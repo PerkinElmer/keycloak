@@ -32,7 +32,6 @@ import { useFetch } from "../utils/useFetch";
 import { ManagePriorityDialog } from "./ManagePriorityDialog";
 import { toCustomUserFederation } from "./routes/CustomUserFederation";
 import { toNewCustomUserFederation } from "./routes/NewCustomUserFederation";
-import { toUserFederationKerberos } from "./routes/UserFederationKerberos";
 import { toUserFederationLdap } from "./routes/UserFederationLdap";
 
 import "./user-federation.css";
@@ -127,8 +126,6 @@ export default function UserFederationSection() {
     switch (providerId) {
       case "ldap":
         return toUserFederationLdap({ realm, id });
-      case "kerberos":
-        return toUserFederationKerberos({ realm, id });
       default:
         return toCustomUserFederation({ realm, providerId, id });
     }

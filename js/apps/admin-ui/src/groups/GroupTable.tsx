@@ -44,7 +44,7 @@ export const GroupTable = ({
   const id = getLastId(location.pathname);
 
   const { hasAccess } = useAccess();
-  const isManager = hasAccess("manage-users") || currentGroup()?.access?.manage;
+  const isManager = hasAccess("manage-realm") || currentGroup()?.access?.manage;
 
   const loader = async (first?: number, max?: number) => {
     const params: Record<string, string> = {
@@ -54,17 +54,10 @@ export const GroupTable = ({
     };
 
     let groupsData = undefined;
-    if (id) {
-      groupsData = await fetchAdminUI<GroupRepresentation[]>(
-        "ui-ext/groups/subgroup",
-        { ...params, id },
-      );
-    } else {
-      groupsData = await fetchAdminUI<GroupRepresentation[]>("ui-ext/groups", {
-        ...params,
-        global: "false",
-      });
-    }
+    groupsData = await fetchAdminUI<GroupRepresentation[]>("groups", {
+      ...params,
+      global: "false",
+    });
 
     return groupsData;
   };
@@ -123,7 +116,30 @@ export const GroupTable = ({
         isPaginated
         isSearching={!!search}
         toolbarItem={
-          <>
+          isManager ? (
+            <>
+              <ToolbarItem>
+                <SearchInput
+                  data-testid="group-search"
+                  placeholder={t("filterGroups")}
+                  value={search}
+                  onChange={(_, value) => {
+                    setSearch(value);
+                  }}
+                  onSearch={refresh}
+                  onClear={() => {
+                    setSearch("");
+                    refresh();
+                  }}
+                />
+              </ToolbarItem>
+              <GroupToolbar
+                toggleCreate={toggleCreateOpen}
+                toggleDelete={toggleShowDelete}
+                kebabDisabled={selectedRows!.length === 0}
+              />
+            </>
+          ) : (
             <ToolbarItem>
               <SearchInput
                 data-testid="group-search"
@@ -139,12 +155,7 @@ export const GroupTable = ({
                 }}
               />
             </ToolbarItem>
-            <GroupToolbar
-              toggleCreate={toggleCreateOpen}
-              toggleDelete={toggleShowDelete}
-              kebabDisabled={selectedRows!.length === 0}
-            />
-          </>
+          )
         }
         actions={
           !isManager
@@ -161,14 +172,6 @@ export const GroupTable = ({
                   title: t("moveTo"),
                   onRowClick: async (group) => {
                     setMove(group);
-                    return false;
-                  },
-                },
-                {
-                  title: t("createChildGroup"),
-                  onRowClick: async (group) => {
-                    setSelectedRows([group]);
-                    toggleCreateOpen();
                     return false;
                   },
                 },

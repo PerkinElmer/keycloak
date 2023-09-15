@@ -93,9 +93,6 @@ const GroupTreeContextMenu = ({
           <DropdownItem key="move" onClick={toggleMoveOpen}>
             {t("moveTo")}
           </DropdownItem>,
-          <DropdownItem key="create" onClick={toggleCreateOpen}>
-            {t("createChildGroup")}
-          </DropdownItem>,
           <DropdownSeparator key="separator" />,
           <DropdownItem key="delete" onClick={toggleDeleteOpen}>
             {t("common:delete")}
@@ -167,7 +164,7 @@ export const GroupTree = ({
   useFetch(
     async () => {
       const groups = await fetchAdminUI<GroupRepresentation[]>(
-        "ui-ext/groups",
+        "groups",
         Object.assign(
           {
             first: `${first}`,
@@ -180,17 +177,7 @@ export const GroupTree = ({
       );
       const count = (await adminClient.groups.count({ search, top: true }))
         .count;
-      let subGroups: GroupRepresentation[] = [];
-      if (activeItem) {
-        subGroups = await fetchAdminUI<GroupRepresentation[]>(
-          "ui-ext/groups/subgroup",
-          {
-            id: activeItem.id!,
-            first: `${firstSub}`,
-            max: `${SUBGROUP_COUNT}`,
-          },
-        );
-      }
+      const subGroups: GroupRepresentation[] = [];
       return { groups, count, subGroups };
     },
     ({ groups, count, subGroups }) => {

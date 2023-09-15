@@ -9,6 +9,7 @@ import { i18n } from "./i18n/i18n";
 import { initKeycloak } from "./keycloak";
 import { RootRoute } from "./routes";
 
+import "./revvity.css";
 import "./index.css";
 
 // Initialize required components before rendering app.

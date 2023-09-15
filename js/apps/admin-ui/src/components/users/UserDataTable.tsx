@@ -10,7 +10,6 @@ import {
   ChipGroup,
   EmptyState,
   FlexItem,
-  Label,
   Text,
   TextContent,
   Toolbar,
@@ -18,12 +17,7 @@ import {
   ToolbarItem,
   Tooltip,
 } from "@patternfly/react-core";
-import {
-  ExclamationCircleIcon,
-  InfoCircleIcon,
-  WarningTriangleIcon,
-} from "@patternfly/react-icons";
-import type { IRowData } from "@patternfly/react-table";
+import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
@@ -33,7 +27,6 @@ import { useAlerts } from "../alert/Alerts";
 import { useConfirmDialog } from "../confirm-dialog/ConfirmDialog";
 import { KeycloakSpinner } from "../keycloak-spinner/KeycloakSpinner";
 import { ListEmptyState } from "../list-empty-state/ListEmptyState";
-import { BruteUser, findUsers } from "../role-mapping/resource";
 import { KeycloakDataTable } from "../table-toolbar/KeycloakDataTable";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { emptyFormatter } from "../../util";
@@ -169,24 +162,6 @@ export function UserDataTable() {
       }
     },
   });
-
-  const StatusRow = (user: BruteUser) => {
-    return (
-      <>
-        {!user.enabled && (
-          <Label key={user.id} color="red" icon={<InfoCircleIcon />}>
-            {t("disabled")}
-          </Label>
-        )}
-        {user.bruteForceStatus?.disabled && (
-          <Label key={user.id} color="orange" icon={<WarningTriangleIcon />}>
-            {t("temporaryLocked")}
-          </Label>
-        )}
-        {user.enabled && !user.bruteForceStatus?.disabled && "—"}
-      </>
-    );
-  };
 
   const ValidatedEmail = (user: UserRepresentation) => {
     return (
@@ -351,25 +326,16 @@ export function UserDataTable() {
         }
         toolbarItem={toolbar()}
         subToolbar={subtoolbar()}
-        actionResolver={(rowData: IRowData) => {
-          const user: UserRepresentation = rowData.data;
-          if (!user.access?.manage) return [];
-
-          return [
-            {
-              title: t("common:delete"),
-              onClick: () => {
-                setSelectedRows([user]);
-                toggleDeleteDialog();
-              },
-            },
-          ];
-        }}
         columns={[
           {
             name: "username",
             displayKey: "users:username",
             cellRenderer: UserDetailLink,
+          },
+          {
+            name: "id",
+            displayKey: "users:ID",
+            cellFormatters: [emptyFormatter()],
           },
           {
             name: "email",
@@ -385,11 +351,6 @@ export function UserDataTable() {
             name: "firstName",
             displayKey: "users:firstName",
             cellFormatters: [emptyFormatter()],
-          },
-          {
-            name: "status",
-            displayKey: "users:status",
-            cellRenderer: StatusRow,
           },
         ]}
       />

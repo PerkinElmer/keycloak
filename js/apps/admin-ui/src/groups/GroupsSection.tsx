@@ -20,17 +20,14 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { GroupBreadCrumbs } from "../components/bread-crumb/GroupBreadCrumbs";
-import { PermissionsTab } from "../components/permission-tab/PermissionTab";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAccess } from "../context/access/Access";
 import { fetchAdminUI } from "../context/auth/admin-ui-endpoint";
 import { useRealm } from "../context/realm-context/RealmContext";
 import helpUrls from "../help-urls";
 import { useFetch } from "../utils/useFetch";
-import useIsFeatureEnabled, { Feature } from "../utils/useIsFeatureEnabled";
 import useToggle from "../utils/useToggle";
 import { GroupAttributes } from "./GroupAttributes";
-import { GroupRoleMapping } from "./GroupRoleMapping";
 import { GroupTable } from "./GroupTable";
 import { GroupsModal } from "./GroupsModal";
 import { Members } from "./Members";
@@ -61,13 +58,8 @@ export default function GroupsSection() {
   const refresh = () => setKey(key + 1);
 
   const { hasAccess } = useAccess();
-  const isFeatureEnabled = useIsFeatureEnabled();
-  const canViewPermissions =
-    isFeatureEnabled(Feature.AdminFineGrainedAuthz) &&
-    hasAccess("manage-authorization", "manage-users", "manage-clients");
   const canManageGroup =
     hasAccess("manage-users") || currentGroup()?.access?.manage;
-  const canManageRoles = hasAccess("manage-users");
   const canViewDetails =
     hasAccess("query-groups", "view-users") ||
     hasAccess("manage-users", "query-groups");
@@ -87,7 +79,7 @@ export default function GroupsSection() {
           const group =
             i !== "search"
               ? await fetchAdminUI<GroupRepresentation | undefined>(
-                  "ui-ext/groups/" + i,
+                  "groups/" + i,
                 )
               : { name: t("searchGroups"), id: "search" };
           if (group) {
@@ -192,16 +184,6 @@ export default function GroupsSection() {
                   mountOnEnter
                   unmountOnExit
                 >
-                  <Tab
-                    data-testid="groups"
-                    eventKey={0}
-                    title={<TabTitleText>{t("childGroups")}</TabTitleText>}
-                  >
-                    <GroupTable
-                      refresh={refresh}
-                      canViewDetails={canViewDetails}
-                    />
-                  </Tab>
                   {canViewMembers && (
                     <Tab
                       data-testid="members"
@@ -220,26 +202,6 @@ export default function GroupsSection() {
                   >
                     <GroupAttributes />
                   </Tab>
-                  {canManageRoles && (
-                    <Tab
-                      eventKey={3}
-                      data-testid="role-mapping-tab"
-                      title={<TabTitleText>{t("roleMapping")}</TabTitleText>}
-                    >
-                      <GroupRoleMapping id={id!} name={currentGroup()?.name!} />
-                    </Tab>
-                  )}
-                  {canViewPermissions && (
-                    <Tab
-                      eventKey={4}
-                      data-testid="permissionsTab"
-                      title={
-                        <TabTitleText>{t("common:permissions")}</TabTitleText>
-                      }
-                    >
-                      <PermissionsTab id={id} type="groups" />
-                    </Tab>
-                  )}
                 </Tabs>
               )}
               {subGroups.length === 0 && (

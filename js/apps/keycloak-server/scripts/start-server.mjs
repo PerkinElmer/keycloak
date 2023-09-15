@@ -7,7 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { pipeline } from "node:stream/promises";
 import { fileURLToPath } from "node:url";
-import tar from "tar-fs";
+import { extract } from "tar-fs";
 
 const DIR_NAME = path.dirname(fileURLToPath(import.meta.url));
 const SERVER_DIR = path.resolve(DIR_NAME, "../server");
@@ -27,6 +27,7 @@ async function startServer() {
       "start-dev",
       "--http-port=8180",
       "--features=account3,admin-fine-grained-authz,declarative-user-profile",
+      "--features-disabled=kerberos",
       ...args,
     ],
     {
@@ -35,7 +36,7 @@ async function startServer() {
         KEYCLOAK_ADMIN_PASSWORD: "admin",
         ...process.env,
       },
-    }
+    },
   );
 
   child.stdout.pipe(process.stdout);
@@ -67,7 +68,7 @@ async function getNightlyAsset() {
   });
 
   return release.data.assets.find(
-    ({ name }) => name === "keycloak-999.0.0-SNAPSHOT.tar.gz"
+    ({ name }) => name === "keycloak-999.0.0-SNAPSHOT.tar.gz",
   );
 }
 
@@ -82,5 +83,5 @@ async function getAssetAsStream(asset) {
 }
 
 function extractTarball(stream, path, options) {
-  return pipeline(stream, gunzip(), tar.extract(path, options));
+  return pipeline(stream, gunzip(), extract(path, options));
 }

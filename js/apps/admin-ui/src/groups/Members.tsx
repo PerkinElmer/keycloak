@@ -16,7 +16,6 @@ import { Link, useLocation } from "react-router-dom";
 
 import { adminClient } from "../admin-client";
 import { useAlerts } from "../components/alert/Alerts";
-import { GroupPath } from "../components/group/GroupPath";
 import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import {
@@ -34,19 +33,6 @@ import { getLastId } from "./groupIdUtils";
 
 type MembersOf = UserRepresentation & {
   membership: GroupRepresentation[];
-};
-
-const MemberOfRenderer = (member: MembersOf) => {
-  return (
-    <>
-      {member.membership.map((group, index) => (
-        <>
-          <GroupPath key={group.id} group={group} />
-          {member.membership[index + 1] ? ", " : ""}
-        </>
-      ))}
-    </>
-  );
 };
 
 const UserDetailLink = (user: MembersOf) => {
@@ -255,11 +241,6 @@ export const Members = () => {
             name: "lastName",
             displayKey: "groups:lastName",
             cellFormatters: [emptyFormatter()],
-          },
-          {
-            name: "membership",
-            displayKey: "groups:membership",
-            cellRenderer: MemberOfRenderer,
           },
         ]}
         emptyState={

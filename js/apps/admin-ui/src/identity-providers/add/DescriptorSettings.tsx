@@ -201,12 +201,6 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
               >
                 {t("email")}
               </SelectOption>
-              <SelectOption
-                data-testid="kerberos-option"
-                value="urn:oasis:names:tc:SAML:2.0:nameid-format:kerberos"
-              >
-                {t("kerberos")}
-              </SelectOption>
 
               <SelectOption
                 data-testid="x509-option"
