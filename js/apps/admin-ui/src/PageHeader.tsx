@@ -171,7 +171,7 @@ export const Header = () => {
   };
 
   const logo = environment.logo ? environment.logo : "/SIMA23.svg";
-  const logoUrl = environment.resourceUrl;
+  const logoUrl = environment.authServerUrl;
 
   return (
     <PageHeader
