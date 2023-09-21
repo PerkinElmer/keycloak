@@ -19,6 +19,13 @@ export const UserRoleMapping = ({ id, name }: UserRoleMappingProps) => {
     try {
       const realmRoles = rows
         .filter((row) => row.client === undefined)
+        .filter(
+          (row) =>
+            row.role.name !== undefined &&
+            ["Administrator", "GroupManager", "SImA-user"].includes(
+              row.role.name,
+            ),
+        )
         .map((row) => row.role as RoleMappingPayload)
         .flat();
       await adminClient.users.addRealmRoleMappings({

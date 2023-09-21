@@ -130,8 +130,6 @@ const UserDropdown = () => {
 };
 
 export const Header = () => {
-  const { realm } = useRealm();
-
   const headerTools = () => {
     const picture = keycloak.tokenParsed?.picture;
     return (
@@ -173,9 +171,7 @@ export const Header = () => {
   };
 
   const logo = environment.logo ? environment.logo : "/SIMA23.svg";
-  const logoUrl = environment.logoUrl
-    ? environment.logoUrl
-    : toDashboard({ realm });
+  const logoUrl = environment.resourceUrl;
 
   return (
     <PageHeader

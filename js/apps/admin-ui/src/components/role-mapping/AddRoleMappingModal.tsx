@@ -72,12 +72,20 @@ export const AddRoleMappingModal = ({
 
     const roles = await getAvailableRoles(type, { ...params, id });
     const sorted = localeSort(roles, compareRow);
-    return sorted.map((row) => {
-      return {
-        role: row.role,
-        id: row.role.id,
-      };
-    });
+    return sorted
+      .filter(
+        (row) =>
+          row.role.name !== undefined &&
+          ["Administrator", "GroupManager", "SImA-user"].includes(
+            row.role.name,
+          ),
+      )
+      .map((row) => {
+        return {
+          role: row.role,
+          id: row.role.id,
+        };
+      });
   };
 
   const clientRolesLoader = async (
