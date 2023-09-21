@@ -31,21 +31,24 @@ export const RequiredActions = () => {
 
   useFetch(
     async () => {
-      const [requiredActions, unregisteredRequiredActions] = await Promise.all([
+      const [requiredActions] = await Promise.all([
         adminClient.authenticationManagement.getRequiredActions(),
         adminClient.authenticationManagement.getUnregisteredRequiredActions(),
       ]);
+      const selectedActions = [];
+      for (let index = 0; index < requiredActions.length; index++) {
+        const action = requiredActions[index];
+
+        if (action.alias == "UPDATE_PASSWORD") {
+          selectedActions.push(action);
+        }
+      }
+
       return [
-        ...requiredActions.map((a) => ({
+        ...selectedActions.map((a) => ({
           name: a.name!,
           enabled: a.enabled!,
           defaultAction: a.defaultAction!,
-          data: a,
-        })),
-        ...unregisteredRequiredActions.map((a) => ({
-          name: a.name!,
-          enabled: false,
-          defaultAction: false,
           data: a,
         })),
       ];
@@ -144,24 +147,6 @@ export const RequiredActions = () => {
               isChecked={row.enabled}
               onChange={() => {
                 updateAction(row.data, "enabled");
-              }}
-              aria-label={toKey(row.name)}
-            />
-          ),
-        },
-        {
-          name: "default",
-          displayKey: "authentication:setAsDefaultAction",
-          thTooltipText: "authentication-help:authDefaultActionTooltip",
-          cellRenderer: (row) => (
-            <Switch
-              id={`default-${toKey(row.name)}`}
-              label={t("common:on")}
-              isDisabled={!row.enabled}
-              labelOff={!row.enabled ? t("disabledOff") : t("common:off")}
-              isChecked={row.defaultAction}
-              onChange={() => {
-                updateAction(row.data, "defaultAction");
               }}
               aria-label={toKey(row.name)}
             />

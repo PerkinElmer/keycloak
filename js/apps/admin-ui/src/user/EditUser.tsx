@@ -172,32 +172,10 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
     },
   });
 
-  const [toggleImpersonateDialog, ImpersonateConfirm] = useConfirmDialog({
-    titleKey: "users:impersonateConfirm",
-    messageKey: "users:impersonateConfirmDialog",
-    continueButtonLabel: "users:impersonate",
-    onConfirm: async () => {
-      try {
-        const data = await adminClient.users.impersonation(
-          { id: user.id! },
-          { user: user.id!, realm },
-        );
-        if (data.sameRealm) {
-          window.location = data.redirect;
-        } else {
-          window.open(data.redirect, "_blank");
-        }
-      } catch (error) {
-        addError("users:impersonateError", error);
-      }
-    },
-  });
-
   const defaultTab = hasAccess("view-events") ? "settings" : "groups";
 
   return (
     <>
-      <ImpersonateConfirm />
       <DeleteConfirm />
       {hasAccess("view-events") && (
         <ViewHeader
@@ -205,13 +183,6 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
           className="kc-username-view-header"
           divider={false}
           dropdownItems={[
-            <DropdownItem
-              key="impersonate"
-              isDisabled={!user.access?.impersonate}
-              onClick={() => toggleImpersonateDialog()}
-            >
-              {t("impersonate")}
-            </DropdownItem>,
             <DropdownItem
               key="delete"
               isDisabled={!user.access?.manage}
