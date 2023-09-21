@@ -34,7 +34,7 @@ const defaultEnvironment: Environment = {
   resourceUrl: ".",
   masterRealm: "master",
   resourceVersion: "unknown",
-  logo: "/logo.svg",
+  logo: "/SIMA23.svg",
   logoUrl: "",
 };
 

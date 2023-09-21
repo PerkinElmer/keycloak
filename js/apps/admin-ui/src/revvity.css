@@ -136,6 +136,10 @@
     --pf-c-page__sidebar--BackgroundColor: white;
     border-right: 1px solid #26212121;
   }
+
+  .pf-c-page__header {
+    --pf-c-page__header--BackgroundColor: white;
+  }
   
   .pf-c-nav {
     --pf-global--BackgroundColor--dark-400: transparent;

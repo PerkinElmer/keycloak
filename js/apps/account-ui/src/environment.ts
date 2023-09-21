@@ -34,7 +34,7 @@ const defaultEnvironment: Environment = {
   realm: realm || "master",
   clientId: "security-admin-console-v2",
   resourceUrl: "http://localhost:8080",
-  logo: "/logo.svg",
+  logo: "/SIMA23.svg",
   logoUrl: "/",
   features: {
     isRegistrationEmailAsUsername: false,
