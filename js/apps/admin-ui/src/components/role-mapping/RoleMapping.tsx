@@ -6,7 +6,6 @@ import {
   Badge,
   Button,
   ButtonVariant,
-  Checkbox,
   ToolbarItem,
 } from "@patternfly/react-core";
 import { cellWidth } from "@patternfly/react-table";
@@ -92,7 +91,7 @@ export const RoleMapping = ({
   const [key, setKey] = useState(0);
   const refresh = () => setKey(key + 1);
 
-  const [hide, setHide] = useState(true);
+  const [hide] = useState(true);
   const [showAssign, setShowAssign] = useState(false);
   const [selected, setSelected] = useState<Row[]>([]);
 
@@ -120,7 +119,13 @@ export const RoleMapping = ({
 
     const roles = await getMapping(type, id);
     const realmRolesMapping =
-      roles.realmMappings?.map((role) => ({ role })) || [];
+      roles.realmMappings
+        ?.filter(
+          (role) =>
+            role.name !== undefined &&
+            ["Administrator", "GroupManager", "SImA-user"].includes(role.name),
+        )
+        .map((role) => ({ role })) || [];
     const clientMapping = Object.values(roles.clientMappings || {})
       .map((client) =>
         client.mappings.map((role: RoleRepresentation) => ({
@@ -179,42 +184,28 @@ export const RoleMapping = ({
           (value.role as CompositeRole).isInherited || false
         }
         toolbarItem={
-          <>
-            <ToolbarItem>
-              <Checkbox
-                label={t("common:hideInheritedRoles")}
-                id="hideInheritedRoles"
-                data-testid="hideInheritedRoles"
-                isChecked={hide}
-                onChange={(check) => {
-                  setHide(check);
-                  refresh();
-                }}
-              />
-            </ToolbarItem>
-            {isManager && (
-              <>
-                <ToolbarItem>
-                  <Button
-                    data-testid="assignRole"
-                    onClick={() => setShowAssign(true)}
-                  >
-                    {t("common:assignRole")}
-                  </Button>
-                </ToolbarItem>
-                <ToolbarItem>
-                  <Button
-                    variant="link"
-                    data-testid="unAssignRole"
-                    onClick={toggleDeleteDialog}
-                    isDisabled={selected.length === 0}
-                  >
-                    {t("common:unAssignRole")}
-                  </Button>
-                </ToolbarItem>
-              </>
-            )}
-          </>
+          isManager && (
+            <>
+              <ToolbarItem>
+                <Button
+                  data-testid="assignRole"
+                  onClick={() => setShowAssign(true)}
+                >
+                  {t("common:assignRole")}
+                </Button>
+              </ToolbarItem>
+              <ToolbarItem>
+                <Button
+                  variant="link"
+                  data-testid="unAssignRole"
+                  onClick={toggleDeleteDialog}
+                  isDisabled={selected.length === 0}
+                >
+                  {t("common:unAssignRole")}
+                </Button>
+              </ToolbarItem>
+            </>
+          )
         }
         actions={
           isManager
