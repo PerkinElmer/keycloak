@@ -1,7 +1,6 @@
 <#import "template.ftl" as layout>
 <@layout.registrationLayout displayMessage=!messagesPerField.existsError('username','password') displayInfo=realm.password && realm.registrationAllowed && !registrationDisabled??; section>
     <#if section = "header">
-        ${msg("loginAccountTitle")}
     <#elseif section = "form">
     <div id="kc-form">
       <div id="kc-form-wrapper">
@@ -42,22 +41,21 @@
                 <div class="${properties.kcFormGroupClass!} ${properties.kcFormSettingClass!}">
                     <div id="kc-form-options">
                         <#if realm.rememberMe && !usernameHidden??>
-                            <div class="checkbox">
-                                <label>
+                            <div class="remember-me">
                                     <#if login.rememberMe??>
                                         <input tabindex="3" id="rememberMe" name="rememberMe" type="checkbox" checked> ${msg("rememberMe")}
                                     <#else>
                                         <input tabindex="3" id="rememberMe" name="rememberMe" type="checkbox"> ${msg("rememberMe")}
                                     </#if>
-                                </label>
+                            </div>
+                            <div class="forgot-password">
+                                <#if realm.resetPasswordAllowed>
+                                    <span><a tabindex="5" href="${url.loginResetCredentialsUrl}">${msg("doForgotPassword")}</a></span>
+                                </#if>
                             </div>
                         </#if>
                         </div>
-                        <div class="${properties.kcFormOptionsWrapperClass!}">
-                            <#if !realm.resetPasswordAllowed>
-                                <span>${msg("doForgotPassword")}</span>
-                            </#if>
-                        </div>
+                        
 
                   </div>
 

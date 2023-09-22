@@ -171,13 +171,12 @@ export const Header = () => {
   };
 
   const logo = environment.logo ? environment.logo : "/SIMA23.svg";
-  const logoUrl = environment.authServerUrl;
 
   return (
     <PageHeader
       showNavToggle
       logo={
-        <Link to={logoUrl}>
+        <Link to="/">
           <Brand
             src={environment.resourceUrl + logo}
             id="masthead-logo"

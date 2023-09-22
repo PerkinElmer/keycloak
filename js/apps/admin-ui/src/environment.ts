@@ -35,7 +35,7 @@ const defaultEnvironment: Environment = {
   masterRealm: "master",
   resourceVersion: "unknown",
   logo: "/SIMA23.svg",
-  logoUrl: "",
+  logoUrl: "/",
 };
 
 // Merge the default and injected environment variables together.

@@ -51,26 +51,12 @@ const menuItems: MenuItem[] = [
         label: "deviceActivity",
         path: "account-security/device-activity",
       },
-      {
-        label: "linkedAccounts",
-        path: "account-security/linked-accounts",
-        isHidden: !environment.features.isLinkedAccountsEnabled,
-      },
     ],
-  },
-  {
-    label: "applications",
-    path: "applications",
   },
   {
     label: "groups",
     path: "groups",
     isHidden: !environment.features.isViewGroupsEnabled,
-  },
-  {
-    label: "resources",
-    path: "resources",
-    isHidden: !environment.features.isMyResourcesEnabled,
   },
 ];
 
