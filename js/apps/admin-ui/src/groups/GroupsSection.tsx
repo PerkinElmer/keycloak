@@ -1,15 +1,12 @@
 import type GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
 import {
-  Button,
   DropdownItem,
   PageSection,
   PageSectionVariants,
   Tab,
   TabTitleText,
   Tabs,
-  Tooltip,
 } from "@patternfly/react-core";
-import { AngleLeftIcon, TreeIcon } from "@patternfly/react-icons";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -19,7 +16,6 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAccess } from "../context/access/Access";
 import { fetchAdminUI } from "../context/auth/admin-ui-endpoint";
 import { useRealm } from "../context/realm-context/RealmContext";
-import helpUrls from "../help-urls";
 import { useFetch } from "../utils/useFetch";
 import useToggle from "../utils/useToggle";
 import { GroupAttributes } from "./GroupAttributes";
@@ -47,7 +43,6 @@ export default function GroupsSection() {
   const location = useLocation();
   const id = getLastId(location.pathname);
 
-  const [open, toggle] = useToggle(true);
   const [key, setKey] = useState(0);
   const refresh = () => setKey(key + 1);
 
@@ -113,19 +108,9 @@ export default function GroupsSection() {
         />
       )}
       <PageSection variant={PageSectionVariants.light} className="pf-u-p-0">
-        <Tooltip content={open ? t("common:hide") : t("common:show")}>
-          <Button
-            aria-label={open ? t("common:hide") : t("common:show")}
-            variant="plain"
-            icon={open ? <AngleLeftIcon /> : <TreeIcon />}
-            onClick={toggle}
-          />
-        </Tooltip>
         <GroupBreadCrumbs />
         <ViewHeader
           titleKey={!id ? "groups:groups" : currentGroup()?.name!}
-          subKey={!id ? "groups:groupsDescription" : ""}
-          helpUrl={!id ? helpUrls.groupsUrl : ""}
           divider={!id}
           dropdownItems={
             id && canManageGroup

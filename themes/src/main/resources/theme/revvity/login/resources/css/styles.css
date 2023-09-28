@@ -15,6 +15,10 @@
   text-align: center;
 }
 
+#kc-header-wrapper {
+  display: none;
+}
+
 div.kc-logo-text {
   display: none;
 }

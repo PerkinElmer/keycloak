@@ -22,15 +22,14 @@ const Groups = () => {
   usePromise(
     (signal) => getGroups({ signal }),
     (groups) => {
-      if (directMembership) {
-        groups.forEach((el) =>
-          getParents(
-            el,
-            groups,
-            groups.map(({ path }) => path),
-          ),
-        );
-      }
+      groups.forEach((el) =>
+        getParents(
+          el,
+          groups,
+          groups.map(({ path }) => path),
+        ),
+      );
+
       setGroups(groups);
     },
     [directMembership],

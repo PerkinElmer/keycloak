@@ -26,7 +26,6 @@ import { KeycloakCard } from "../components/keycloak-card/KeycloakCard";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import helpUrls from "../help-urls";
 import { toUpperCase } from "../util";
 import { useFetch } from "../utils/useFetch";
 import { ManagePriorityDialog } from "./ManagePriorityDialog";
@@ -178,8 +177,6 @@ export default function UserFederationSection() {
       )}
       <ViewHeader
         titleKey="userFederation"
-        subKey="user-federation:userFederationExplain"
-        helpUrl={helpUrls.userFederationUrl}
         {...(userFederations && userFederations.length > 0
           ? {
               lowerDropdownItems: ufAddProviderDropdownItems,

@@ -26,7 +26,6 @@ import { useRealms } from "../context/RealmsContext";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { toDashboard } from "../dashboard/routes/Dashboard";
 import environment from "../environment";
-import helpUrls from "../help-urls";
 import { convertFormValuesToObject, convertToFormValues } from "../util";
 import { RealmSettingsEmailTab } from "./EmailTab";
 import { RequiredActions } from "../authentication/RequiredActions";
@@ -99,8 +98,6 @@ const RealmSettingsHeader = ({
       />
       <ViewHeader
         titleKey={realmName}
-        subKey="realm-settings:realmSettingsExplain"
-        helpUrl={helpUrls.realmSettingsUrl}
         divider={false}
         dropdownItems={[
           <DropdownItem

@@ -15,7 +15,6 @@ import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { fetchAdminUI } from "../context/auth/admin-ui-endpoint";
 import { useRealm } from "../context/realm-context/RealmContext";
-import helpUrls from "../help-urls";
 import { RevocationModal } from "./RevocationModal";
 import SessionsTable from "./SessionsTable";
 import useToggle from "../utils/useToggle";
@@ -127,12 +126,7 @@ export default function SessionsSection() {
   return (
     <>
       <LogoutConfirm />
-      <ViewHeader
-        dropdownItems={dropdownItems}
-        titleKey="sessions:title"
-        subKey="sessions:sessionExplain"
-        helpUrl={helpUrls.sessionsUrl}
-      />
+      <ViewHeader dropdownItems={dropdownItems} titleKey="sessions:title" />
       <PageSection variant="light" className="pf-u-p-0">
         {revocationModalOpen && (
           <RevocationModal

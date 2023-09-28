@@ -30,7 +30,7 @@ import { cellWidth, expandable } from "@patternfly/react-table";
 import { pickBy } from "lodash-es";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { adminClient } from "../admin-client";
@@ -43,8 +43,6 @@ import {
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useRealm } from "../context/realm-context/RealmContext";
-import helpUrls from "../help-urls";
-import { toRealmSettings } from "../realm-settings/routes/RealmSettings";
 import { toUser } from "../user/routes/User";
 import { useFetch } from "../utils/useFetch";
 import useFormatDate, { FORMAT_DATE_AND_TIME } from "../utils/useFormatDate";
@@ -453,21 +451,7 @@ export default function EventsSection() {
 
   return (
     <>
-      <ViewHeader
-        titleKey="events:title"
-        subKey={
-          <Trans i18nKey="events:eventExplain">
-            If you want to configure user events, Admin events or Event
-            listeners, please enter
-            <Link to={toRealmSettings({ realm, tab: "events" })}>
-              {t("eventConfig")}
-            </Link>
-            page realm settings to configure.
-          </Trans>
-        }
-        helpUrl={helpUrls.eventsUrl}
-        divider={false}
-      />
+      <ViewHeader titleKey="events:title" divider={false} />
       <PageSection variant="light" className="pf-u-p-0">
         <RoutableTabs
           isBox
