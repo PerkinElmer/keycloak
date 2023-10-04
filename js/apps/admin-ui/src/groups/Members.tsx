@@ -64,6 +64,7 @@ export const Members = () => {
   );
 
   const isManager = hasAccess("manage-users");
+  const isAdmin = hasAccess("manage-realm");
 
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
@@ -210,28 +211,53 @@ export const Members = () => {
               ]
             : []
         }
-        columns={[
-          {
-            name: "username",
-            displayKey: "common:name",
-            cellRenderer: UserDetailLink,
-          },
-          {
-            name: "email",
-            displayKey: "groups:email",
-            cellFormatters: [emptyFormatter()],
-          },
-          {
-            name: "firstName",
-            displayKey: "groups:firstName",
-            cellFormatters: [emptyFormatter()],
-          },
-          {
-            name: "lastName",
-            displayKey: "groups:lastName",
-            cellFormatters: [emptyFormatter()],
-          },
-        ]}
+        columns={
+          isAdmin
+            ? [
+                {
+                  name: "username",
+                  displayKey: "common:name",
+                  cellRenderer: UserDetailLink,
+                },
+                {
+                  name: "email",
+                  displayKey: "groups:email",
+                  cellFormatters: [emptyFormatter()],
+                },
+                {
+                  name: "firstName",
+                  displayKey: "groups:firstName",
+                  cellFormatters: [emptyFormatter()],
+                },
+                {
+                  name: "lastName",
+                  displayKey: "groups:lastName",
+                  cellFormatters: [emptyFormatter()],
+                },
+              ]
+            : [
+                {
+                  name: "username",
+                  displayKey: "common:name",
+                  cellFormatters: [emptyFormatter()],
+                },
+                {
+                  name: "email",
+                  displayKey: "groups:email",
+                  cellFormatters: [emptyFormatter()],
+                },
+                {
+                  name: "firstName",
+                  displayKey: "groups:firstName",
+                  cellFormatters: [emptyFormatter()],
+                },
+                {
+                  name: "lastName",
+                  displayKey: "groups:lastName",
+                  cellFormatters: [emptyFormatter()],
+                },
+              ]
+        }
         emptyState={
           <ListEmptyState
             message={t("users:noUsersFound")}
