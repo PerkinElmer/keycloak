@@ -17,6 +17,8 @@ import { MoveDialog } from "./components/MoveDialog";
 import { getLastId } from "./groupIdUtils";
 import { useWhoAmI } from "../context/whoami/WhoAmI";
 import { adminClient } from "../admin-client";
+import { toGroups } from "./routes/Groups";
+import { useRealm } from "../context/realm-context/RealmContext";
 
 type GroupTableProps = {
   refresh: () => void;
@@ -29,6 +31,7 @@ export const GroupTable = ({
 }: GroupTableProps) => {
   const { t } = useTranslation("groups");
 
+  const { realm: realmName } = useRealm();
   const [selectedRows, setSelectedRows] = useState<GroupRepresentation[]>([]);
 
   const [rename, setRename] = useState<GroupRepresentation>();
@@ -197,7 +200,10 @@ export const GroupTable = ({
             displayKey: "groups:groupName",
             cellRenderer: (group) =>
               canViewDetails ? (
-                <Link key={group.id} to={`${location.pathname}/${group.id}`}>
+                <Link
+                  key={group.id}
+                  to={toGroups({ realm: realmName, id: group.id! })}
+                >
                   {group.name}
                 </Link>
               ) : (

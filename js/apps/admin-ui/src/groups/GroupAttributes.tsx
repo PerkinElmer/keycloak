@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-
+import { useAccess } from "../context/access/Access";
 import { adminClient } from "../admin-client";
 import { useAlerts } from "../components/alert/Alerts";
 import {
@@ -26,6 +26,9 @@ export const GroupAttributes = () => {
   const form = useForm<AttributeForm>({
     mode: "onChange",
   });
+  const { hasSomeAccess } = useAccess();
+
+  const saveActive = hasSomeAccess("manage-users");
 
   const location = useLocation();
   const id = getLastId(location.pathname)!;
@@ -60,7 +63,7 @@ export const GroupAttributes = () => {
       <AttributesForm
         form={form}
         save={save}
-        fineGrainedAccess={currentGroup?.access?.manage}
+        fineGrainedAccess={saveActive}
         reset={() =>
           form.reset({
             attributes: arrayToKeyValue(currentGroup?.attributes!),

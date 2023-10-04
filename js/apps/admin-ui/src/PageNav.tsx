@@ -71,6 +71,8 @@ export const PageNav = () => {
     "view-events",
   );
 
+  const showUsers = hasSomeAccess("manage-realm");
+
   const showConfigure = hasSomeAccess(
     "manage-realm",
     "query-clients",
@@ -87,7 +89,7 @@ export const PageNav = () => {
           <Divider />
           {showManage && !isOnAddRealm && (
             <NavGroup aria-label={t("manage")} title={t("manage")}>
-              <LeftNav title="users" path="/users" />
+              {showUsers && <LeftNav title="users" path="/users" />}
               <LeftNav title="groups" path="/groups" />
               <LeftNav title="sessions" path="/sessions" />
               {showConfigure && <LeftNav title="events" path="/events" />}

@@ -27,3 +27,8 @@ export const toGroups = (params: GroupsParams): Partial<Path> => {
     pathname: generatePath(path, params),
   };
 };
+
+export const GroupsRouteWithoutRealm: AppRouteObject = {
+  ...GroupsRoute,
+  path: "/",
+};
