@@ -71,7 +71,7 @@ export const PageNav = () => {
     "view-events",
   );
 
-  const showUsers = hasSomeAccess("manage-realm");
+  const showUsers = hasSomeAccess("manage-realm", "view-events");
 
   const showConfigure = hasSomeAccess(
     "manage-realm",
