@@ -14,7 +14,7 @@ export const UsersRoute: AppRouteObject = {
   element: <UsersSection />,
   breadcrumb: (t) => t("users:title"),
   handle: {
-    access: "query-users",
+    access: "view-events",
   },
 };
 
