@@ -182,7 +182,6 @@ export const UserForm = ({
           filterGroups={selectedGroups}
         />
       )}
-      {isUserProfileEnabled && <EmailVerified />}
       {user?.id && (
         <>
           <FormGroup label={t("common:id")} fieldId="kc-id" isRequired>
@@ -224,8 +223,8 @@ export const UserForm = ({
           <FederatedUserLink user={user} />
         </FormGroup>
       )}
-      {isUserProfileEnabled ? (
-        <UserProfileFields config={user?.userProfileMetadata!} />
+      {isUserProfileEnabled && user?.userProfileMetadata ? (
+        <UserProfileFields config={user.userProfileMetadata} />
       ) : (
         <>
           {!realm?.registrationEmailAsUsername && (
@@ -282,7 +281,7 @@ export const UserForm = ({
           >
             <KeycloakTextInput
               data-testid="lastName-input"
-              id="kc-lastname"
+              id="kc-lastName"
               aria-label={t("lastName")}
               {...register("lastName")}
             />

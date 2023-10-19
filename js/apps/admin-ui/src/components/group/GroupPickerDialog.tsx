@@ -94,7 +94,7 @@ export const GroupPickerDialog = ({
                 first: `${first}`,
                 max: `${max + 1}`,
               },
-              isSearching ? null : { search: filter },
+              isSearching ? { search: filter } : null,
             ),
           );
         }
