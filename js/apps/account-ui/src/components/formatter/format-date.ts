@@ -23,7 +23,8 @@ export default function useFormatter() {
       time: number,
       options: Intl.DateTimeFormatOptions | undefined = TIME_FORMAT,
     ) {
-      return new Intl.DateTimeFormat("en", options).format(time);
+      const correctTime = time * 1000;
+      return new Intl.DateTimeFormat("en", options).format(correctTime);
     },
   };
 }
