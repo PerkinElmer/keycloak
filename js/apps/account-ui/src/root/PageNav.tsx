@@ -18,7 +18,6 @@ import {
   useLinkClickHandler,
   useLocation,
 } from "react-router-dom";
-import { environment } from "../environment";
 import { TFuncKey } from "../i18n";
 
 type RootMenuItem = {
@@ -52,11 +51,6 @@ const menuItems: MenuItem[] = [
         path: "account-security/device-activity",
       },
     ],
-  },
-  {
-    label: "groups",
-    path: "groups",
-    isHidden: !environment.features.isViewGroupsEnabled,
   },
 ];
 
