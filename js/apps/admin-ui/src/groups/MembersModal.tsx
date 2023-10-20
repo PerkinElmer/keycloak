@@ -88,6 +88,7 @@ export const MemberModal = ({ groupId, onClose }: MemberModalProps) => {
         ariaLabelKey="users:title"
         searchPlaceholderKey="users:searchForUser"
         canSelectAll
+        //onSelect={isManager ? (rows) => setSelectedRows([...rows]) : undefined}
         onSelect={(rows) => setSelectedRows([...rows])}
         emptyState={
           <ListEmptyState

@@ -122,7 +122,7 @@ export const GroupTable = ({
       )}
       <KeycloakDataTable
         key={`${id}${key}`}
-        onSelect={(rows) => setSelectedRows([...rows])}
+        onSelect={isManager ? (rows) => setSelectedRows([...rows]) : undefined}
         canSelectAll
         loader={loader}
         ariaLabelKey="groups:groups"

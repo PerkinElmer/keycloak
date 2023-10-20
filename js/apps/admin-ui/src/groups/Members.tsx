@@ -129,7 +129,7 @@ export const Members = () => {
         ariaLabelKey="groups:members"
         isPaginated
         canSelectAll
-        onSelect={(rows) => setSelectedRows([...rows])}
+        onSelect={isManager ? (rows) => setSelectedRows([...rows]) : undefined}
         toolbarItem={
           isManager && (
             <>
