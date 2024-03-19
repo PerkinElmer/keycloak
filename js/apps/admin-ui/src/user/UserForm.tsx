@@ -5,20 +5,19 @@ import {
   ActionGroup,
   AlertVariant,
   Button,
+  Checkbox,
   FormGroup,
   Switch,
 } from "@patternfly/react-core";
 import { useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { useAlerts } from "../components/alert/Alerts";
 import { FormAccess } from "../components/form-access/FormAccess";
-import { GroupPickerDialog } from "../components/group/GroupPickerDialog";
 import { HelpItem } from "ui-shared";
 import { KeycloakTextInput } from "../components/keycloak-text-input/KeycloakTextInput";
-import { useAccess } from "../context/access/Access";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { emailRegexPattern } from "../util";
@@ -26,17 +25,22 @@ import useFormatDate from "../utils/useFormatDate";
 import useIsFeatureEnabled, { Feature } from "../utils/useIsFeatureEnabled";
 import { FederatedUserLink } from "./FederatedUserLink";
 import { UserProfileFields } from "./UserProfileFields";
-import { RequiredActionMultiSelect } from "./user-credentials/RequiredActionMultiSelect";
+import { PasswordInput } from "../components/password-input/PasswordInput";
 
 export type BruteForced = {
   isBruteForceProtected?: boolean;
   isLocked?: boolean;
 };
 
+export interface UserFormSaveResponse extends UserRepresentation {
+  temporaryPassword: string;
+  isAdmin: boolean;
+}
+
 export type UserFormProps = {
   user?: UserRepresentation;
   bruteForce?: BruteForced;
-  save: (user: UserRepresentation) => void;
+  save: (user: UserFormSaveResponse) => void;
   onGroupsUpdate?: (groups: GroupRepresentation[]) => void;
 };
 
@@ -47,7 +51,6 @@ export const UserForm = ({
     isLocked: false,
   },
   save,
-  onGroupsUpdate,
 }: UserFormProps) => {
   const { t } = useTranslation("users");
   const { realm: realmName } = useRealm();
@@ -57,21 +60,17 @@ export const UserForm = ({
   const navigate = useNavigate();
   const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();
-  const { hasAccess } = useAccess();
-  const isManager = hasAccess("manage-users");
 
   const {
     handleSubmit,
     register,
     watch,
     reset,
+    control,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext<UserFormSaveResponse>();
   const watchUsernameInput = watch("username");
-  const [selectedGroups, setSelectedGroups] = useState<GroupRepresentation[]>(
-    []
-  );
-  const [open, setOpen] = useState(false);
+
   const [locked, setLocked] = useState(isLocked);
   const [realm, setRealm] = useState<RealmRepresentation>();
 
@@ -95,27 +94,6 @@ export const UserForm = ({
     }
   };
 
-  const addChips = async (groups: GroupRepresentation[]): Promise<void> => {
-    setSelectedGroups([...selectedGroups!, ...groups]);
-    onGroupsUpdate?.([...selectedGroups!, ...groups]);
-  };
-
-  const addGroups = async (groups: GroupRepresentation[]): Promise<void> => {
-    const newGroups = groups;
-
-    newGroups.forEach(async (group) => {
-      try {
-        await adminClient.users.addToGroup({
-          id: user!.id!,
-          groupId: group.id!,
-        });
-        addAlert(t("users:addedGroupMembership"), AlertVariant.success);
-      } catch (error) {
-        addError("users:addedGroupMembershipError", error);
-      }
-    });
-  };
-
   const isUserProfileEnabled =
     isFeatureEnabled(Feature.DeclarativeUserProfile) &&
     realm?.attributes?.userProfileEnabled === "true";
@@ -127,22 +105,6 @@ export const UserForm = ({
       fineGrainedAccess={user?.access?.manage}
       className="pf-u-mt-lg"
     >
-      {open && (
-        <GroupPickerDialog
-          type="selectMany"
-          text={{
-            title: "users:selectGroups",
-            ok: "users:join",
-          }}
-          canBrowse={isManager}
-          onConfirm={(groups) => {
-            user?.id ? addGroups(groups || []) : addChips(groups || []);
-            setOpen(false);
-          }}
-          onClose={() => setOpen(false)}
-          filterGroups={selectedGroups}
-        />
-      )}
       {user?.id && (
         <>
           <FormGroup label={t("common:id")} fieldId="kc-id" isRequired>
@@ -166,11 +128,6 @@ export const UserForm = ({
           </FormGroup>
         </>
       )}
-      <RequiredActionMultiSelect
-        name="requiredActions"
-        label="requiredUserActions"
-        help="users-help:requiredUserActions"
-      />
       {(user?.federationLink || user?.origin) && (
         <FormGroup
           label={t("federationLink")}
@@ -246,6 +203,35 @@ export const UserForm = ({
               {...register("lastName")}
             />
           </FormGroup>
+          {!user?.id && (
+            <>
+              <FormGroup
+                label={"Temporary Password"}
+                fieldId="kc-temporaryPassword"
+                validated={errors.temporaryPassword ? "error" : "default"}
+              >
+                <PasswordInput
+                  data-testid="temporaryPasswordField"
+                  id="kc-temporaryPassword"
+                  {...register("temporaryPassword", { required: true })}
+                />
+              </FormGroup>
+              <Controller
+                name="isAdmin"
+                control={control}
+                defaultValue={false}
+                render={({ field }) => (
+                  <Checkbox
+                    id="kc-is-admin"
+                    data-testid="is-admin"
+                    label={"Is Administrator?"}
+                    isChecked={field.value === true}
+                    onChange={(value) => field.onChange(value)}
+                  />
+                )}
+              />
+            </>
+          )}
         </>
       )}
       {isBruteForceProtected && (

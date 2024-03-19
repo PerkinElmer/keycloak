@@ -68,6 +68,10 @@
 
 /* Input */
 
+.pf-c-input-group {
+  gap: 12px;
+}
+
 .pf-c-form-control {
   --pf-c-form-control--BorderRadius: 12px;
   --pf-c-form-control--BorderTopColor: black;
@@ -128,6 +132,10 @@
 
 .pf-c-select .pf-c-select__toggle::before {
   border-radius: 12px;
+}
+
+.pf-c-check {
+  align-items: center;
 }
 
 /* Nav */
