@@ -28,7 +28,10 @@ export default function CreateUser() {
   const navigate = useNavigate();
   const { adminClient } = useAdminClient();
   const { realm } = useRealm();
-  const userForm = useForm<UserFormSaveResponse>({ mode: "onChange" });
+  const userForm = useForm<UserFormSaveResponse>({
+    mode: "onChange",
+    defaultValues: { temporaryPassword: "harmony" },
+  });
 
   const [harmonyAdminRole, setHarmonyAdminRole] =
     useState<RoleRepresentation>();
