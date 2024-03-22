@@ -140,6 +140,10 @@
 
 /* Nav */
 
+#masthead-logo {
+  height: 48px;
+}
+
 .pf-c-page__sidebar {
   --pf-c-page__sidebar--BackgroundColor: white;
   border-right: 1px solid #26212121;

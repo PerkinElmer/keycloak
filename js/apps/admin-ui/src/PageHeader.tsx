@@ -127,7 +127,7 @@ export const Header = () => {
     <PageHeader
       logo={
         <Brand
-          src={environment.resourceUrl + "/logo.svg"}
+          src={environment.resourceUrl + "/revvity-logo-white.svg"}
           id="masthead-logo"
           alt="Logo"
           className="keycloak__pageheader_brand"
