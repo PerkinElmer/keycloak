@@ -7,7 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { pipeline } from "node:stream/promises";
 import { fileURLToPath } from "node:url";
-import tar from "tar-fs";
+import { extract } from "tar-fs";
 
 const DIR_NAME = path.dirname(fileURLToPath(import.meta.url));
 const SERVER_DIR = path.resolve(DIR_NAME, "../server");
@@ -63,11 +63,11 @@ async function getNightlyAsset() {
   const release = await api.repos.getReleaseByTag({
     owner: "keycloak",
     repo: "keycloak",
-    tag: "nightly",
+    tag: "21.1.2",
   });
 
   return release.data.assets.find(
-    ({ name }) => name === "keycloak-999.0.0-SNAPSHOT.tar.gz"
+    ({ name }) => name === "keycloak-21.1.2.tar.gz"
   );
 }
 
@@ -82,5 +82,5 @@ async function getAssetAsStream(asset) {
 }
 
 function extractTarball(stream, path, options) {
-  return pipeline(stream, gunzip(), tar.extract(path, options));
+  return pipeline(stream, gunzip(), extract(path, options));
 }
