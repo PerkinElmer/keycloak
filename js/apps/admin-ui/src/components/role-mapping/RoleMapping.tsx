@@ -149,7 +149,14 @@ export const RoleMapping = ({
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
-        await Promise.all(deleteMapping(adminClient, type, id, selected));
+        await Promise.all(
+          deleteMapping(
+            adminClient,
+            type,
+            id,
+            selected.filter((row) => row.role.name !== "service")
+          )
+        );
         addAlert(t("clients:clientScopeRemoveSuccess"), AlertVariant.success);
         refresh();
       } catch (error) {
@@ -179,7 +186,8 @@ export const RoleMapping = ({
         searchPlaceholderKey="clients:searchByName"
         ariaLabelKey="clients:clientScopeList"
         isRowDisabled={(value) =>
-          (value.role as CompositeRole).isInherited || false
+          !!(value.role as CompositeRole).isInherited ||
+          value.role.name === "service"
         }
         toolbarItem={
           <>
@@ -210,7 +218,10 @@ export const RoleMapping = ({
                     variant="link"
                     data-testid="unAssignRole"
                     onClick={toggleDeleteDialog}
-                    isDisabled={selected.length === 0}
+                    isDisabled={
+                      selected.length === 0 ||
+                      selected.some((row) => row.role.name === "service")
+                    }
                   >
                     {t("common:unAssignRole")}
                   </Button>

@@ -67,7 +67,9 @@ export const AddRoleMappingModal = ({
       params.search = search;
     }
 
-    const roles = await getAvailableRoles(adminClient, type, { ...params, id });
+    const roles = (
+      await getAvailableRoles(adminClient, type, { ...params, id })
+    ).filter((role) => role.role.name !== "service");
     const sorted = localeSort(roles, compareRow);
     return sorted.map((row) => {
       return {
