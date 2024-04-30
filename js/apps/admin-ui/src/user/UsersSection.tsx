@@ -144,11 +144,24 @@ export default function UsersSection() {
     }
 
     try {
-      return await findUsers({
-        adminClient,
-        briefRepresentation: true,
-        ...params,
+      const usersWithServiceRole = await adminClient.roles.findUsersWithRole({
+        name: "service",
       });
+
+      return (
+        await findUsers({
+          adminClient,
+          briefRepresentation: true,
+          ...params,
+        })
+      ).map((user) => ({
+        ...user,
+        realmRoles: usersWithServiceRole.find(
+          (serviceUser) => user.id === serviceUser.id
+        )
+          ? ["service"]
+          : [],
+      }));
     } catch (error) {
       if (userStorage?.length) {
         addError("users:noUsersFoundErrorStorage", error);
@@ -181,7 +194,9 @@ export default function UsersSection() {
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
-        for (const user of selectedRows) {
+        for (const user of selectedRows.filter(
+          (row) => !row.realmRoles?.includes("service")
+        )) {
           await adminClient.users.del({ id: user.id! });
         }
         setSelectedRows([]);
@@ -249,7 +264,10 @@ export default function UsersSection() {
             variant={ButtonVariant.link}
             onClick={toggleDeleteDialog}
             data-testid="delete-user-btn"
-            isDisabled={selectedRows.length === 0}
+            isDisabled={
+              selectedRows.length === 0 ||
+              selectedRows.some((row) => row.realmRoles?.includes("service"))
+            }
           >
             {t("deleteUser")}
           </Button>
@@ -264,7 +282,12 @@ export default function UsersSection() {
               <DropdownItem
                 key="deleteUser"
                 component="button"
-                isDisabled={selectedRows.length === 0}
+                isDisabled={
+                  selectedRows.length === 0 ||
+                  selectedRows.some((row) =>
+                    row.realmRoles?.includes("service")
+                  )
+                }
                 onClick={() => {
                   toggleDeleteDialog();
                   setKebabOpen(false);
@@ -328,6 +351,7 @@ export default function UsersSection() {
               searchPlaceholderKey="users:searchForUser"
               canSelectAll
               onSelect={(rows) => setSelectedRows([...rows])}
+              isRowDisabled={(row) => row.realmRoles.includes("service")}
               emptyState={
                 !listUsers ? (
                   <>
