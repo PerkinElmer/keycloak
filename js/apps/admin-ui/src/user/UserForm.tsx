@@ -42,6 +42,7 @@ export type UserFormProps = {
   bruteForce?: BruteForced;
   save: (user: UserFormSaveResponse) => void;
   onGroupsUpdate?: (groups: GroupRepresentation[]) => void;
+  isServiceUser?: boolean;
 };
 
 export const UserForm = ({
@@ -51,6 +52,7 @@ export const UserForm = ({
     isLocked: false,
   },
   save,
+  isServiceUser = false,
 }: UserFormProps) => {
   const { t } = useTranslation("users");
   const { realm: realmName } = useRealm();
@@ -104,6 +106,7 @@ export const UserForm = ({
       role="query-users"
       fineGrainedAccess={user?.access?.manage}
       className="pf-u-mt-lg"
+      isReadOnly={isServiceUser}
     >
       {user?.id && (
         <>
@@ -259,29 +262,31 @@ export const UserForm = ({
           />
         </FormGroup>
       )}
-      <ActionGroup>
-        <Button
-          data-testid={!user?.id ? "create-user" : "save-user"}
-          isDisabled={
-            !user?.id &&
-            !watchUsernameInput &&
-            !realm?.registrationEmailAsUsername
-          }
-          variant="primary"
-          type="submit"
-        >
-          {user?.id ? t("common:save") : t("common:create")}
-        </Button>
-        <Button
-          data-testid="cancel-create-user"
-          onClick={() =>
-            user?.id ? reset(user) : navigate(`/${realmName}/users`)
-          }
-          variant="link"
-        >
-          {user?.id ? t("common:revert") : t("common:cancel")}
-        </Button>
-      </ActionGroup>
+      {!isServiceUser && (
+        <ActionGroup>
+          <Button
+            data-testid={!user?.id ? "create-user" : "save-user"}
+            isDisabled={
+              !user?.id &&
+              !watchUsernameInput &&
+              !realm?.registrationEmailAsUsername
+            }
+            variant="primary"
+            type="submit"
+          >
+            {user?.id ? t("common:save") : t("common:create")}
+          </Button>
+          <Button
+            data-testid="cancel-create-user"
+            onClick={() =>
+              user?.id ? reset(user) : navigate(`/${realmName}/users`)
+            }
+            variant="link"
+          >
+            {user?.id ? t("common:revert") : t("common:cancel")}
+          </Button>
+        </ActionGroup>
+      )}
     </FormAccess>
   );
 };

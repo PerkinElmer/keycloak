@@ -43,6 +43,7 @@ export default function EditUser() {
   const { id } = useParams<UserParams>();
   const { t } = useTranslation("users");
   const [user, setUser] = useState<UserRepresentation>();
+  const [isServiceUser, setIsServiceUser] = useState<boolean>(false);
   const [bruteForced, setBruteForced] = useState<BruteForced>();
   const [refreshCount, setRefreshCount] = useState(0);
   const refresh = () => setRefreshCount((count) => count + 1);
@@ -62,11 +63,22 @@ export default function EditUser() {
       const isBruteForceProtected = currentRealm.bruteForceProtected;
       const isLocked = isBruteForceProtected && attackDetection.disabled;
 
-      return { user, bruteForced: { isBruteForceProtected, isLocked } };
+      const serviceUsers = await adminClient.roles.findUsersWithRole({
+        name: "service",
+      });
+
+      return {
+        user,
+        bruteForced: { isBruteForceProtected, isLocked },
+        isServiceUser: serviceUsers.some(
+          (serviceUser) => serviceUser.id === user.id
+        ),
+      };
     },
-    ({ user, bruteForced }) => {
+    ({ user, bruteForced, isServiceUser }) => {
       setUser(user);
       setBruteForced(bruteForced);
+      setIsServiceUser(isServiceUser);
     },
     [refreshCount]
   );
@@ -76,17 +88,28 @@ export default function EditUser() {
   }
 
   return (
-    <EditUserForm user={user} bruteForced={bruteForced} refresh={refresh} />
+    <EditUserForm
+      user={user}
+      bruteForced={bruteForced}
+      refresh={refresh}
+      isServiceUser={isServiceUser}
+    />
   );
 }
 
 type EditUserFormProps = {
   user: UserRepresentation;
   bruteForced: BruteForced;
+  isServiceUser: boolean;
   refresh: () => void;
 };
 
-const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
+const EditUserForm = ({
+  user,
+  bruteForced,
+  isServiceUser,
+  refresh,
+}: EditUserFormProps) => {
   const { t } = useTranslation("users");
   const { realm } = useRealm();
   const { adminClient } = useAdminClient();
@@ -175,29 +198,31 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
     <>
       <ImpersonateConfirm />
       <DeleteConfirm />
-      <ViewHeader
-        titleKey={user.username!}
-        className="kc-username-view-header"
-        divider={false}
-        dropdownItems={[
-          <DropdownItem
-            key="impersonate"
-            isDisabled={!user.access?.impersonate}
-            onClick={() => toggleImpersonateDialog()}
-          >
-            {t("impersonate")}
-          </DropdownItem>,
-          <DropdownItem
-            key="delete"
-            isDisabled={!user.access?.manage}
-            onClick={() => toggleDeleteDialog()}
-          >
-            {t("common:delete")}
-          </DropdownItem>,
-        ]}
-        onToggle={(value) => save({ ...user, enabled: value })}
-        isEnabled={user.enabled}
-      />
+      {!isServiceUser && (
+        <ViewHeader
+          titleKey={user.username!}
+          className="kc-username-view-header"
+          divider={false}
+          dropdownItems={[
+            <DropdownItem
+              key="impersonate"
+              isDisabled={!user.access?.impersonate}
+              onClick={() => toggleImpersonateDialog()}
+            >
+              {t("impersonate")}
+            </DropdownItem>,
+            <DropdownItem
+              key="delete"
+              isDisabled={!user.access?.manage}
+              onClick={() => toggleDeleteDialog()}
+            >
+              {t("common:delete")}
+            </DropdownItem>,
+          ]}
+          onToggle={(value) => save({ ...user, enabled: value })}
+          isEnabled={user.enabled}
+        />
+      )}
 
       <PageSection variant="light" className="pf-u-p-0">
         <UserProfileProvider>
@@ -213,25 +238,34 @@ const EditUserForm = ({ user, bruteForced, refresh }: EditUserFormProps) => {
                 {...settingsTab}
               >
                 <PageSection variant="light">
-                  <UserForm save={save} user={user} bruteForce={bruteForced} />
+                  <UserForm
+                    save={save}
+                    user={user}
+                    bruteForce={bruteForced}
+                    isServiceUser={isServiceUser}
+                  />
                 </PageSection>
               </Tab>
-              <Tab
-                data-testid="credentials"
-                isHidden={!user.access?.view}
-                title={<TabTitleText>{t("common:credentials")}</TabTitleText>}
-                {...credentialsTab}
-              >
-                <UserCredentials user={user} />
-              </Tab>
-              <Tab
-                data-testid="role-mapping-tab"
-                isHidden={!user.access?.mapRoles}
-                title={<TabTitleText>{t("roleMapping")}</TabTitleText>}
-                {...roleMappingTab}
-              >
-                <UserRoleMapping id={user.id!} name={user.username!} />
-              </Tab>
+              {!isServiceUser && (
+                <Tab
+                  data-testid="credentials"
+                  isHidden={!user.access?.view}
+                  title={<TabTitleText>{t("common:credentials")}</TabTitleText>}
+                  {...credentialsTab}
+                >
+                  <UserCredentials user={user} />
+                </Tab>
+              )}
+              {!isServiceUser && (
+                <Tab
+                  data-testid="role-mapping-tab"
+                  isHidden={!user.access?.mapRoles}
+                  title={<TabTitleText>{t("roleMapping")}</TabTitleText>}
+                  {...roleMappingTab}
+                >
+                  <UserRoleMapping id={user.id!} name={user.username!} />
+                </Tab>
+              )}
             </RoutableTabs>
           </FormProvider>
         </UserProfileProvider>
