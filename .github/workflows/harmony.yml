@@ -14,8 +14,8 @@ jobs:
       WORKSPACE: admin-ui
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/pnpm-setup
+      - uses: ./.github/actions/npm-setup
         with:
           working-directory: js
-      - run: pnpm --filter ${{ env.WORKSPACE }} run build
+      - run: npm run build --workspace=${{ env.WORKSPACE }}
         working-directory: js
