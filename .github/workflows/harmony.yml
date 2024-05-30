@@ -1,0 +1,25 @@
+name: Build for Harmony
+
+on:
+  push:
+    branches: [harmony/21.1]
+  pull_request:
+    branches: [harmony/21.1]
+
+jobs:
+  admin-ui:
+    name: Admin UI
+    runs-on: ubuntu-latest
+    env:
+      WORKSPACE: admin-ui
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+          working-directory: js
+      - run: pnpm --filter ${{ env.WORKSPACE }} run build
+        working-directory: js
