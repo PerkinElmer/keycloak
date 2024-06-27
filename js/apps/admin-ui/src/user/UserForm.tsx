@@ -154,7 +154,11 @@ export const UserForm = ({
               fieldId="kc-username"
               isRequired
               validated={errors.username ? "error" : "default"}
-              helperTextInvalid={t("common:required")}
+              helperTextInvalid={
+                errors.username?.type === "pattern"
+                  ? "Service User Already Exists"
+                  : t("common:required")
+              }
             >
               <KeycloakTextInput
                 id="kc-username"
@@ -163,7 +167,7 @@ export const UserForm = ({
                   !realm?.editUsernameAllowed &&
                   realm?.editUsernameAllowed !== undefined
                 }
-                {...register("username")}
+                {...register("username", { pattern: /^(?!service$).*$/i })}
               />
             </FormGroup>
           )}

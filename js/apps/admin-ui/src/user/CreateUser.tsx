@@ -57,6 +57,7 @@ export default function CreateUser() {
   const save = async (formUser: UserFormSaveResponse) => {
     try {
       const { temporaryPassword, isAdmin = false, ...user } = formUser;
+      if (user.username === "service") return;
       const createdUser = await adminClient.users.create({
         ...user,
         username: formUser.username?.trim(),

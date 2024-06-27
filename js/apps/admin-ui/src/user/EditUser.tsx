@@ -137,6 +137,7 @@ const EditUserForm = ({
   useUpdateEffect(() => userForm.reset(user), [user]);
 
   const save = async (formUser: UserRepresentation) => {
+    if (formUser.username === "service") return;
     try {
       await adminClient.users.update(
         { id: user.id! },
