@@ -144,9 +144,11 @@ export default function UsersSection() {
     }
 
     try {
-      const usersWithServiceRole = await adminClient.roles.findUsersWithRole({
-        name: "service",
-      });
+      const usersWithServiceRole = await adminClient.roles
+        .findUsersWithRole({
+          name: "service",
+        })
+        .catch(() => [] as UserRepresentation[]);
 
       return (
         await findUsers({

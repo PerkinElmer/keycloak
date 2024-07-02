@@ -22,7 +22,9 @@ export const UsersInRoleTab = () => {
   const { adminClient } = useAdminClient();
 
   const loader = async (first?: number, max?: number) => {
-    const role = await adminClient.roles.findOneById({ id: id });
+    const role = await adminClient.roles
+      .findOneById({ id: id })
+      .catch(() => undefined);
     if (!role) {
       throw new Error(t("common:notFound"));
     }

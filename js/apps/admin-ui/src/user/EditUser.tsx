@@ -63,9 +63,11 @@ export default function EditUser() {
       const isBruteForceProtected = currentRealm.bruteForceProtected;
       const isLocked = isBruteForceProtected && attackDetection.disabled;
 
-      const serviceUsers = await adminClient.roles.findUsersWithRole({
-        name: "service",
-      });
+      const serviceUsers = await adminClient.roles
+        .findUsersWithRole({
+          name: "service",
+        })
+        .catch(() => [] as UserRepresentation[]);
 
       return {
         user,
