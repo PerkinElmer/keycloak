@@ -73,6 +73,17 @@
   padding: 10px 8px;
 }
 
+.pf-c-form-control[aria-invalid="true"] {
+  border: 1px solid #dc0101;
+}
+
+.pf-c-form-control[aria-invalid="true"]:focus,
+.pf-c-form-control[aria-invalid="true"]:focus-visible,
+.pf-c-form-control[aria-invalid="true"]:active {
+  border: 2px solid #dc0101;
+  outline: none;
+}
+
 .pf-c-form__label-text {
   color: var(--revvity-black, #000);
   font-size: 16px;
@@ -80,6 +91,16 @@
   font-weight: 700;
   line-height: 24px;
   margin-bottom: 8px;
+}
+
+.pf-c-form__helper-text {
+  font-size: 14px;
+  margin-top: 4px;
+  margin-left: 4px;
+}
+
+.pf-c-form__helper-text.pf-m-error {
+  color: #dc0101;
 }
 
 .pf-c-button.pf-m-primary {
