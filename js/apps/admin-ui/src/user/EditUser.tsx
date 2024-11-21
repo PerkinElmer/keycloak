@@ -213,13 +213,17 @@ const EditUserForm = ({
             >
               {t("impersonate")}
             </DropdownItem>,
-            <DropdownItem
-              key="delete"
-              isDisabled={!user.access?.manage}
-              onClick={() => toggleDeleteDialog()}
-            >
-              {t("common:delete")}
-            </DropdownItem>,
+            ...(user.username === "Default"
+              ? []
+              : [
+                  <DropdownItem
+                    key="delete"
+                    isDisabled={!user.access?.manage}
+                    onClick={() => toggleDeleteDialog()}
+                  >
+                    {t("common:delete")}
+                  </DropdownItem>,
+                ]),
           ]}
           onToggle={(value) => save({ ...user, enabled: value })}
           isEnabled={user.enabled}

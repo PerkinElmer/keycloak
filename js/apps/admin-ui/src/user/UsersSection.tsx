@@ -267,7 +267,8 @@ export default function UsersSection() {
             data-testid="delete-user-btn"
             isDisabled={
               selectedRows.length === 0 ||
-              selectedRows.some((row) => row.realmRoles?.includes("service"))
+              selectedRows.some((row) => row.realmRoles?.includes("service")) ||
+              selectedRows.some((row) => row.username === "Default")
             }
           >
             {t("deleteUser")}
@@ -287,7 +288,8 @@ export default function UsersSection() {
                   selectedRows.length === 0 ||
                   selectedRows.some((row) =>
                     row.realmRoles?.includes("service")
-                  )
+                  ) ||
+                  selectedRows.some((row) => row.username === "Default")
                 }
                 onClick={() => {
                   toggleDeleteDialog();
@@ -404,7 +406,8 @@ export default function UsersSection() {
               toolbarItem={isManager ? toolbar : undefined}
               actionResolver={(rowData: IRowData) => {
                 const user: UserRepresentation = rowData.data;
-                if (!user.access?.manage) return [];
+                if (!user.access?.manage || user.username === "Default")
+                  return [];
 
                 return [
                   {
