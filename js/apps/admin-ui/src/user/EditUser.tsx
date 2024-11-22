@@ -213,7 +213,7 @@ const EditUserForm = ({
             >
               {t("impersonate")}
             </DropdownItem>,
-            ...(user.username === "Default"
+            ...(user.username?.toLowerCase() === "default"
               ? []
               : [
                   <DropdownItem
