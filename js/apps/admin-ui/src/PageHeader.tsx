@@ -3,7 +3,6 @@ import {
   Brand,
   Dropdown,
   DropdownItem,
-  DropdownSeparator,
   DropdownToggle,
   KebabToggle,
   PageHeader,
@@ -16,20 +15,6 @@ import { useTranslation } from "react-i18next";
 import { useAdminClient } from "./context/auth/AdminClient";
 import { useWhoAmI } from "./context/whoami/WhoAmI";
 import environment from "./environment";
-
-const ManageAccountDropdownItem = () => {
-  const { keycloak } = useAdminClient();
-  const { t } = useTranslation();
-  return (
-    <DropdownItem
-      key="manage account"
-      id="manage-account"
-      onClick={() => keycloak.accountManagement()}
-    >
-      {t("manageAccount")}
-    </DropdownItem>
-  );
-};
 
 const SignOutDropdownItem = () => {
   const { keycloak } = useAdminClient();
@@ -45,17 +30,9 @@ const SignOutDropdownItem = () => {
   );
 };
 
-const kebabDropdownItems = [
-  <ManageAccountDropdownItem key="kebab Manage Account" />,
-  <DropdownSeparator key="kebab sign out separator" />,
-  <SignOutDropdownItem key="kebab Sign out" />,
-];
+const kebabDropdownItems = [<SignOutDropdownItem key="kebab Sign out" />];
 
-const userDropdownItems = [
-  <ManageAccountDropdownItem key="Manage Account" />,
-  <DropdownSeparator key="sign out separator" />,
-  <SignOutDropdownItem key="Sign out" />,
-];
+const userDropdownItems = [<SignOutDropdownItem key="Sign out" />];
 
 const KebabDropdown = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
