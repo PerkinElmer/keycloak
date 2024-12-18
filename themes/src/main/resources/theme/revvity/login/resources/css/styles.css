@@ -161,3 +161,7 @@
   font-style: normal;
   line-height: 1.4;
 }
+
+.checkbox:has(input[id="logout-sessions"]) {
+  display: none;
+}
